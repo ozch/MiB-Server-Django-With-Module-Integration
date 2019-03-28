@@ -1,0 +1,14 @@
+Django==2.1.7
+mysqlclient==1.4.2
+numpy==1.16.2
+paramiko==2.4.2
+pprint==0.1
+PyMySQL==0.9.3
+python-nmap==0.6.1
+PyYAML==5.1
+sklearn==0.0
+=============================
+Microsoft Redistribution C++ 2013
+Microsoft Redistribution C++ 14.00
+NMAP
+MySQL

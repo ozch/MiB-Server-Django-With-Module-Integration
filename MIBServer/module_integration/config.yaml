@@ -1,0 +1,54 @@
+#                                                READ ME
+#====================================================================================================
+# - Time is measure in seconds.
+# - Changes in database configurations require must be followed by following steps.
+#     -Importing database structure into mysql.
+#     -Django database migration.
+# - Minimum scan intervals in port scanning and sniffer scan may result in network congestion.
+# - Alpha and omega define the range any kind of port scanning where the define port numbers.
+#====================================================================================================
+
+#IMPORTATN:You have to change database configurations
+#These configurations automatically change the config
+#in setting.py file of django server
+database:
+  host: localhost
+  port: 3306
+  username: root
+  password: admin
+  schema: mib
+
+#topology configuration target topology mapping module.
+#scan intervel decide after how much time network must
+#be scanned for changes
+topology:
+  scan_intervel: 1800
+
+#portscan configurations target OpenPortScanner module 
+#scan intervel decide after how much time devices must
+#be scanned for open ports
+#alpha and omega are the range for port scan.
+portscan:
+  alpha: 1
+  omega: 1024
+  scan_intervel: 1800
+
+
+#portscan configurations target PacketSnifferDetection 
+#module scan intervel decide after how much time netwo
+#-rk must be scanned for packet sniffer
+#alpha and omega are the range for port scan.
+sniffer_scan:
+  alpha: 1
+  omega: 1024
+  scan_intervel: 1800
+
+
+#portscan configurations target PacketFlowCapture Modu 
+#-le port dedicate the port at which you want to colle
+#-ct the packet flow.
+#Caution: port must not be assign to anyother program
+#Else it can lead to program malfunction.
+packetflow:
+  host_ip: localhost
+  port: 3310
