@@ -2,7 +2,6 @@ from singleton import  Singleton
 from .topology_graph import TopologyGraph
 from .topology import Topology
 import time
-
 def NetworkTopologyScanThread():
     config = Singleton
     tp = Topology()

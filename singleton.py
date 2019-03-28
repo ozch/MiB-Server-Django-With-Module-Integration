@@ -3,7 +3,7 @@ import yaml
 class Singleton():
     __instance = None
     f = open('config.yaml', 'r')
-
+    print("Used Outer")
     #mutex lock for threads
     mutex = 0
 
