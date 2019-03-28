@@ -1,7 +1,6 @@
 
 from .mysql_connection import MySQLConnection
 import ipaddress
-import pprint
 
 from difflib import SequenceMatcher
 

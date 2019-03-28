@@ -1,6 +1,6 @@
 from .topology_map import TopologyMapper
 from .topology_collector import  TopologyCollector
-import pprint
+#Todo: Join switch and router  interfaces and speed list get in return from TopologyMapper()
 class Topology():
     def __init__(self):
         self.tm = TopologyMapper()

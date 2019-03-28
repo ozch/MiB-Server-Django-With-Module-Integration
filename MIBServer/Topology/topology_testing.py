@@ -103,10 +103,4 @@ with RecursionLimit(3000):
     print(path)
 path=tg.RemoveRedundentRouterIPs(router_interfaces,path)
 print(path)
-import threading
-
-from MIBServer.module_integration import start_services
-thread = threading.Thread(target=start_services.PacketFlowCollectorThread(), args=())
-thread.start()
-time.sleep(3)
 

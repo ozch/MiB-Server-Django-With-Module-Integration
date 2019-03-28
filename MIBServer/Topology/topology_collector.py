@@ -4,9 +4,10 @@ import re
 import pprint
 import traceback
 import time
-from MIBServer.module_integration import topology_mac
+
 #external libraries
 from .mysql_connection import MySQLConnection
+
 class TopologyCollector():
     def getSshCredentials(self):
         con = MySQLConnection().initConnection()
@@ -41,9 +42,7 @@ class TopologyCollector():
             print(hostname,username,password,host_type,port)
             try:
                 print("Trying to contect with {}...".format(str(hostname)))
-                #Connecting and Getting Data From Network Device
                 ssh.connect(hostname, port, username, password, look_for_keys=False)
-                #ssh.exec_command('ping 192.168.1.0')
                 stdin,stdout,stderr = ssh.exec_command('show ip arp')
                 output = stdout.readlines()
                 s = "\n".join(output)

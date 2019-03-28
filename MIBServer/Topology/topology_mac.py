@@ -1,9 +1,6 @@
 #python libraries
 import paramiko
 import re
-import pprint
-import traceback
-import time
 #external libraries
 from .mysql_connection import MySQLConnection
 
