@@ -14,6 +14,7 @@ class Singleton():
     routers_interfaces = {}
     topology = {}
     interfaces_list = {}
+    network_devices={}
 
     #Configuration variables
 

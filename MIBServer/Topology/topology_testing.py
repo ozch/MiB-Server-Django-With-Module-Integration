@@ -1,12 +1,11 @@
-from topology_map import *
-from topology_graph import *
+from .topology_map import *
+from .topology_graph import *
 import pprint
 import sys
-from topology_recursionlimit import *
+from .topology_recursionlimit import *
 import time
 tm = TopologyMapper()
 tg = TopologyGraph()
-from topology_recursionlimit import RecursionLimit
 from singleton import Singleton
 # dict_rt, int_ip_rt, int_sp_rt = tm.getRouterTopology()
 # dict_sw, int_ip_sw, int_sp_sw = tm.getSwitchTopology()
