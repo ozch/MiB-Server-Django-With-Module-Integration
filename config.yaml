@@ -22,31 +22,26 @@ database:
 #scan intervel decide after how much time network must
 #be scanned for changes
 topology:
-  scan_intervel: 1800
+  scan_intervel: 10
 
 #portscan configurations target OpenPortScanner module 
 #scan intervel decide after how much time devices must
 #be scanned for open ports
 #alpha and omega are the range for port scan.
-portscan:
-  alpha: 1
-  omega: 1024
-  scan_intervel: 1800
-
-
-#portscan configurations target PacketSnifferDetection 
+#portscan configurations target PacketSnifferDetection
 #module scan intervel decide after how much time netwo
 #-rk must be scanned for packet sniffer
 #alpha and omega are the range for port scan.
-sniffer_scan:
+portscan:
   alpha: 1
   omega: 1024
-  scan_intervel: 1800
+  scan_intervel: 200
 
 
-#portscan configurations target PacketFlowCapture Modu 
-#-le port dedicate the port at which you want to colle
-#-ct the packet flow.
+
+#packetflow configurations target PacketFlowCapture Mo
+#-dule port dedicate the port at which you want to col
+#-lect the packet flow.
 #Caution: port must not be assign to anyother program
 #Else it can lead to program malfunction.
 packetflow:

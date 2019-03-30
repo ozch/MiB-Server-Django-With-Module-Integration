@@ -2,15 +2,13 @@ from singleton import  Singleton
 from .topology_graph import TopologyGraph
 from .topology import Topology
 import time
-import os
-import asyncio
 from .mysql_connection import *
 def NetworkTopologyScanThread():
     config = Singleton
     tp = Topology()
     tg = TopologyGraph()
+    print("Scanning Network...")
     while True:
-        print("stuck_in_loop")
         if config.mutex == 0:
             config.mutex = 1
             #getting topology from devices
@@ -23,8 +21,7 @@ def NetworkTopologyScanThread():
             config.routers_interfaces = router_interfaces
             config.network_devices = GetNetworkDevies(graph_path, router_interfaces)
             config.mutex = 0
-            time.sleep(3)
-
+            break
         else:
             time.sleep(5)
 def GetNetworkDevies(path_graph,router_interfaces):

@@ -33,10 +33,6 @@ class Singleton():
     port_scan_omega = config["portscan"]["omega"]
     port_scan_scan_intervel = config["portscan"]["scan_intervel"]
 
-    # SnifferScan Configurations
-    sniffer_scan_alpha = config["portscan"]["alpha"]
-    sniffer_scan_omega = config["portscan"]["omega"]
-    sniffer_scan_scan_intervel = config["portscan"]["scan_intervel"]
 
     #PacketFlow Configurations
     pktflw_host_ip = config["packetflow"]["host_ip"]
