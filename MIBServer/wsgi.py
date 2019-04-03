@@ -9,11 +9,19 @@ https://docs.djangoproject.com/en/2.1/howto/deployment/wsgi/
 import os
 import subprocess
 import time
-
+from BackgroundJobs.Topology.mysql_connection import *
 from BackgroundJobs import tasks
 from singleton import Singleton
+con = MySQLConnection().initConnection()
+cursor = con.cursor()
+cursor.execute("SELECT max(id) FROM netflow_v")
+flow_pk = cursor.fetchone()
 
 config = Singleton
+config.flow_id = flow_pk[0]
+
+cursor.close()
+con.close()
 
 print(">> Initializing Packet Flow Collector Module...")
 try:
