@@ -14,8 +14,10 @@ class Singleton():
     routers_interfaces = {}
     topology = {}
     interfaces_list = {}
+    #network devices contain only server and devices
     network_devices={}
-
+    #all devices contain everything including switches and routers
+    all_devices_list=[]
     #Configuration variables
 
     #Database Configurations

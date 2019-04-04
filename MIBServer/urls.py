@@ -32,6 +32,7 @@ urlpatterns = [
     path('token_active/',agent_views.TokenActive,name='token_active'),
     path('agents/',agent_views.Agents,name='agents'),
     path('agent/details/',agent_views.AgentDetails,name='agent_details'),
+    path('uuid_gen/', agent_views.GenerateTokenAction, name='uuid_gen'),
     #From BackgroundJobs
     path('openports/',job_views.OpenPortScan,name='openports'),
     path('snifferscan/',job_views.SnifferScan,name='snifferscan'),
@@ -40,6 +41,7 @@ urlpatterns = [
     #From PacketFlow App
     path('visualization/',packet_views.Visualization,name='visualization'),
     path('packetflow/', packet_views.PacketFlow, name='packetflow')
+
 
 
     #APIs

@@ -1,36 +1,46 @@
 {% extends 'base.html' %}
 {% block content %}
 
-            <!-- Begin Page Content -->
-            <div class="container-fluid">
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
 
-                <!-- Page Heading -->
-                <h1 class="h3 mb-4 text-gray-800">Active Tokens</h1>
-                <div class="row">
-                    <div class="col col-12 card mx-2 px-1">
-                        <table class="table table-sm borde">
-                            <thead>
+        <!-- Page Heading -->
+        <h1 class="h3 mb-4 text-gray-800">Active Tokens</h1>
+
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Devices Table</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>Sr No.</th>
+                            <th>Token</th>
+                            <th>Mac Address</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {% for token in activetokens %}
                             <tr>
-                                <th scope="col">Sr No.</th>
-                                <th scope="col">Token</th>
-                                <th scope="col">Mac Address</th>
-                                <th scope="col">Status</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for token in activetokens %}
-                            <tr>
-                                <td scope="row">{{ forloop.counter }}</td>
+                                <td>{{ forloop.counter }}</td>
                                 <td>{{ token.token }}</td>
                                 <td>{{ token.mac }}</td>
-                                <td> Agent/Token </td>
+                                <td> Agent/Token</td>
                             </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <!-- /.container-fluid -->
+        </div>
 
-        {% endblock %}
+
+    </div>
+    <!-- /.container-fluid -->
+
+{% endblock %}

@@ -28,8 +28,26 @@ def AgentDetails(request):
     return render(request=request,template_name='agent_detail.html',context=context)
 
 def TokenGeneration(request):
+    unusedtokens = TokenStore.objects.filter(is_taken=0)
+    context = {
+        'page_title': "- Token Generation",
+        'unusedtokens': unusedtokens
+
+    }
     context = {
         'page_title': "- Token Generation"
+    }
+    return render(request=request,template_name='token_gen.html',context=context)
+import uuid
+def GenerateTokenAction(request):
+    str = uuid.uuid4()
+    instance = TokenStore(is_taken=0,token=str.__str__())
+    instance.save()
+    unusedtokens = TokenStore.objects.filter(is_taken=0)
+    context = {
+        'page_title': "- Token Generation",
+        'unusedtokens': unusedtokens
+
     }
     return render(request=request,template_name='token_gen.html',context=context)
 

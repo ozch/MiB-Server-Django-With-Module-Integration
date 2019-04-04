@@ -13,7 +13,8 @@ def NetworkTopologyScanThread():
             config.mutex = 1
             #getting topology from devices
             dict_tp = tp.getTopology()
-            graph_path = tg.GenerateGraph(dict_tp)
+            graph_path,all_devices_list = tg.GenerateGraph(dict_tp)
+            config.all_devices_list = all_devices_list
             router_interfaces = tg.GetRouterInterfaceIP(dict_tp)
             #saving to singleton class
             config.topology = dict_tp

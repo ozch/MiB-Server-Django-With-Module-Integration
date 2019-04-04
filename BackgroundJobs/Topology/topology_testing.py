@@ -92,11 +92,12 @@ dict_tp= {
     }
 }
 pprint.pprint(dict_tp)
-graph = tg.GenerateGraph(dict_tp)
+graph,device_list = tg.GenerateGraph(dict_tp)
 pprint.pprint(graph)
 router_interfaces = tg.GetRouterInterfaceIP(dict_tp)
 start = '192.168.2.1'
 end = '192.168.0.3'
+pprint.pprint(device_list)
 with RecursionLimit(3000):
     path = tg.find_path(graph,start, end)
     print(path)

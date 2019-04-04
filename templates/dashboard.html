@@ -16,7 +16,7 @@
                                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total
                                             Devices
                                         </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">40</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ devices }}</div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -34,7 +34,7 @@
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Agents
                                         </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">4</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ agents }}</div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -50,10 +50,9 @@
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Active
-                                            Agents
+                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Active Agents
                                         </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">2</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ activeagents }}</div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -73,7 +72,7 @@
                                         <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                             Router/Switches
                                         </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">2/4</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ routers }}/{{ switches }}</div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-comments fa-2x text-gray-300"></i>
@@ -88,9 +87,9 @@
             </div>
             <!-- /.container-fluid -->
             <div class="container-fluid">
-                <h1 class="h3 mb-4 text-gray-800">Activity</h1>
+                <h1 class="h3 mb-4 text-gray-800">Recent Background Jobs </h1>
                 <div class="row">
-                    <div class="col col-5 card mx-2 px-1">
+                    <div class="col col-md-11 card mx-2 px-1 ">
                         <table class="table table-sm borde">
                             <thead>
                             <tr>
@@ -113,24 +112,6 @@
                                 <td>Switch</td>
                                 <td>New device identified</td>
                                 <td>Just Now</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="col card mx-2 px-1">
-                        <table class="table table-sm borde">
-                            <thead>
-                            <tr>
-                                <th scope="col">IP</th>
-                                <th scope="col">MAC</th>
-                                <th scope="col">Type</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td scope="row">182.168.1.10</td>
-                                <td>00-14-22-01-23-45</td>
-                                <td>Server/Device</td>
                             </tr>
                             </tbody>
                         </table>

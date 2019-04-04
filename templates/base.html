@@ -19,6 +19,7 @@
 
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
 
 </head>
 
@@ -67,11 +68,15 @@
                 <i class="fas fa-fw fa-ticket-alt"></i>
                 <span>Tokens</span>
             </a>
-            <div id="collapseTwo" class="collapse {% if request.resolver_match.url_name == "token_gen" or request.resolver_match.url_name == "token_active" %}show{% endif %}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div id="collapseTwo"
+                 class="collapse {% if request.resolver_match.url_name == "token_gen" or request.resolver_match.url_name == "token_active" %}show{% endif %}"
+                 aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Token Controls:</h6>
-                    <a class="collapse-item {% if request.resolver_match.url_name == "token_gen" %}active{% endif %}" href="{% url 'token_gen' %}">Token Generation</a>
-                    <a class="collapse-item {% if request.resolver_match.url_name == "token_active" %}active{% endif %}" href="{% url 'token_active' %}">Active Tokens</a>
+                    <a class="collapse-item {% if request.resolver_match.url_name == "token_gen" %}active{% endif %}"
+                       href="{% url 'token_gen' %}">Token Generation</a>
+                    <a class="collapse-item {% if request.resolver_match.url_name == "token_active" %}active{% endif %}"
+                       href="{% url 'token_active' %}">Active Tokens</a>
                 </div>
             </div>
         </li>
@@ -91,11 +96,15 @@
                 <i class="fas fa-fw fa-stethoscope"></i>
                 <span>Scanning</span>
             </a>
-            <div id="collapsePages" class="collapse {% if request.resolver_match.url_name == "openports" or request.resolver_match.url_name == "snifferscan" %}show{% endif %}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+            <div id="collapsePages"
+                 class="collapse {% if request.resolver_match.url_name == "openports" or request.resolver_match.url_name == "snifferscan" %}show{% endif %}"
+                 aria-labelledby="headingPages" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Network Scanning:</h6>
-                    <a class="collapse-item {% if request.resolver_match.url_name == "openports" %}active{% endif %}" href="{% url 'openports' %}">Open Port Scan</a>
-                    <a class="collapse-item {% if request.resolver_match.url_name == "snifferscan" %}active{% endif %}" href="{% url 'snifferscan' %}">Sniffer Scan</a>
+                    <a class="collapse-item {% if request.resolver_match.url_name == "openports" %}active{% endif %}"
+                       href="{% url 'openports' %}">Open Port Scan</a>
+                    <a class="collapse-item {% if request.resolver_match.url_name == "snifferscan" %}active{% endif %}"
+                       href="{% url 'snifferscan' %}">Sniffer Scan</a>
                 </div>
             </div>
         </li>
@@ -255,6 +264,11 @@
 
 <!-- Custom scripts for all pages-->
 <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+<!-- Page level plugins -->
+<script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+<!-- Page level custom scripts -->
+<script src="{% static 'js/demo/datatables-demo.js' %}"></script>
 
 </body>
 

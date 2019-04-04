@@ -16,7 +16,6 @@ con = MySQLConnection().initConnection()
 cursor = con.cursor()
 cursor.execute("SELECT max(id) FROM netflow_v")
 flow_pk = cursor.fetchone()
-
 config = Singleton
 config.flow_id = flow_pk[0]
 
@@ -31,7 +30,7 @@ except:
     print(">> Error : Port Error Occured While Initializng Packet Flow Collector \n Try Force Closing Port : {} and Restating The Server...".format(config.pktflw_port))
 
 print(">> Initializing Network Topology Mapping...")
-#tasks.TopologyMappingInit()
+tasks.TopologyMappingInit()
 #tasks.PortScanningThreadInit()
 #Todo : this need to be change according to number of device in network
 print(">> Deleting Previouslly Uncompleted Jobs...")
