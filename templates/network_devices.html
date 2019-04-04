@@ -40,6 +40,26 @@
         </div>
 
 
+        <p>
+            <a class="btn btn-primary" data-toggle="collapse" href="#topology" role="button"
+               aria-expanded="false" aria-controls="topology">Show Topology Structure</a>
+
+        </p>
+        <div class="row">
+            <div class="col">
+                <div class="collapse multi-collapse" id="topology">
+                    <div class="card card-body">
+                        <pre>
+
+                        {{ topology_data | pprint }}
+
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
     <!-- /.container-fluid -->
 

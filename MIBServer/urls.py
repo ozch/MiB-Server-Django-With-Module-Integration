@@ -26,8 +26,11 @@ admin.site.site_title = "AdminPanel - NetworkEngine"
 admin.site.index_title = "Logout of the system before leaving.."
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #From AgentControl App
+    #From MIBServer
+    path('',main_view.LogIn, name="login_page"),
+    path('login',main_view.LogInAction, name="login"),
     path('index/',  main_view.Dashboard,name='index'),
+    #From AgentControl App
     path('token_gen/',agent_views.TokenGeneration,name='token_gen'),
     path('token_active/',agent_views.TokenActive,name='token_active'),
     path('agents/',agent_views.Agents,name='agents'),

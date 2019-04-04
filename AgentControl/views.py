@@ -1,5 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.utils import timezone
+import uuid
+from django.urls import reverse
 
 from .models import *
 def Agents(request):
@@ -32,24 +34,14 @@ def TokenGeneration(request):
     context = {
         'page_title': "- Token Generation",
         'unusedtokens': unusedtokens
-
-    }
-    context = {
-        'page_title': "- Token Generation"
     }
     return render(request=request,template_name='token_gen.html',context=context)
-import uuid
+
 def GenerateTokenAction(request):
     str = uuid.uuid4()
     instance = TokenStore(is_taken=0,token=str.__str__())
     instance.save()
-    unusedtokens = TokenStore.objects.filter(is_taken=0)
-    context = {
-        'page_title': "- Token Generation",
-        'unusedtokens': unusedtokens
-
-    }
-    return render(request=request,template_name='token_gen.html',context=context)
+    return redirect(reverse(TokenGeneration))
 
 def TokenActive(request):
     activetokens = Token.objects.all()
