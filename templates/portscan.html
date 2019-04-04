@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <h1 class="h3 mb-4 text-gray-800">Open Port Scanner</h1>
+
+
+                <div class="row">
+                    <div class="col col-12 card mx-2 px-1">
+                        <table class="table table-sm borde">
+                            <thead>
+                            <tr>
+                                <th scope="col">Parent IP</th>
+                                <th scope="col">Port Type</th>
+                                <th scope="col">Port No</th>
+                                <th scope="col">Application</th>
+                                <th scope="col">CPE</th>
+                                <th scope="col">Exta Info</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for ports in openports %}
+                            <tr>
+                                <td scope="row">{{ ports.ip }}</td>
+                                <td>{{ ports.port_type }}</td>
+                                <td>{{ ports.port_no }}</td>
+                                <td>{{ ports.name }}</td>
+                                <td>{{ ports.cpe }}</td>
+                                <td>{{ ports.extrainfo }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.container-fluid -->
+
+        {% endblock %}

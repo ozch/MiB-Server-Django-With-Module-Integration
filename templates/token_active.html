@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <h1 class="h3 mb-4 text-gray-800">Active Tokens</h1>
+                <div class="row">
+                    <div class="col col-12 card mx-2 px-1">
+                        <table class="table table-sm borde">
+                            <thead>
+                            <tr>
+                                <th scope="col">Sr No.</th>
+                                <th scope="col">Token</th>
+                                <th scope="col">Mac Address</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for token in activetokens %}
+                            <tr>
+                                <td scope="row">{{ forloop.counter }}</td>
+                                <td>{{ token.token }}</td>
+                                <td>{{ token.mac }}</td>
+                                <td> Agent/Token </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+
+        {% endblock %}
