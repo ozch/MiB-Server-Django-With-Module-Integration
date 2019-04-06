@@ -1,7 +1,9 @@
 from django.shortcuts import render,redirect
-
+from django.http import HttpResponse
 from django.utils import timezone
 import uuid
+from django.core.exceptions import ObjectDoesNotExist
+
 from django.urls import reverse
 from BackgroundJobs.models import *
 import time
@@ -25,7 +27,7 @@ def Agents(request):
     }
     return render(request=request,template_name='agents.html',context=context)
 
-def AgentDetails(request,mac,pos = 'system'):
+def AgentDetails(request,mac,tab):
     sysinfo = DeviceInfo.objects.get(mac_address=mac)
     processes = ProcessInfo.objects.get(mac_address=mac)
     services = ServicesInfo.objects.get(mac_address=mac)
@@ -37,7 +39,7 @@ def AgentDetails(request,mac,pos = 'system'):
         'services':services.services_info,
         'openports':openports,
         'device_mac':mac,
-        'pos':pos
+        'tabv':tab
     }
     return render(request=request,template_name='agent_detail.html',context=context)
 
@@ -77,8 +79,10 @@ def Execution(request,mac,is_first):
         context = {
             'script':scrpt.script,
             'mac': scrpt.mac_address,
-            'is_first':'false'
+            'is_first':'false',
+            'tab':'E'
         }
+        time.sleep(5)
         return render(request=request,template_name='script.html',context=context)
     else:
         time.sleep(5)
@@ -86,7 +90,8 @@ def Execution(request,mac,is_first):
         context = {
             'script': scrpt.script,
             'mac': scrpt.mac_address,
-            'is_first': 'false'
+            'is_first': 'false',
+            'tab' : 'E'
         }
         return render(request=request, template_name='script.html', context=context)
 
@@ -94,10 +99,10 @@ def Execution(request,mac,is_first):
 def ProcessKill(request,mac,pn):
     kill = Execute.objects.get(mac_address=mac)
     kill.kill_flag = 1
-    kill.kill_name = pn
+    kill.kill_name = pn+'.exe'
     kill.save()
     time.sleep(5)
-    return redirect(reverse('agent_details',kwargs={'mac':mac}))
+    return redirect(reverse('agent_details',kwargs={'mac':mac,'tab':'P'}))
 def BootControl(request,mac,action):
     cntrl = Execute.objects.get(mac_address=mac)
     cntrl.boot_flag = 1
@@ -111,4 +116,23 @@ def ServiceControl(request, mac, srv, op):
     srv_cntrl.service_name = op+";"+srv
     srv_cntrl.save()
     time.sleep(5)
-    return redirect(reverse('agent_details',kwargs={'mac':mac}))
+    return redirect(reverse('agent_details',kwargs={'mac':mac,'tab':'S'}))
+
+def TokenAuthentication(request,mac,token):
+    try:
+        token_exist = TokenStore.objects.get(token=token)
+    except ObjectDoesNotExist:
+        return HttpResponse("401")
+    if int(token_exist.is_taken) == 1:
+        try:
+            token_auth_check = Token.objects.get(token=token,mac=mac)
+            return HttpResponse("200")
+        except ObjectDoesNotExist:
+            return HttpResponse("401")
+    if int(token_exist.is_taken) == 0:
+        token_exist.is_taken = 1
+        token_exist.save()
+        token_set = Token(token=token,mac=mac)
+        token_set.save()
+        return HttpResponse("200")
+

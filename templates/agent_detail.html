@@ -24,7 +24,7 @@
 
             <div class="tab-content m-4">
                 <div id="sysinfo"
-                     class="tab-pane fade in active {% if request.resolver_match.url_name == "agent_details" %}show{% endif %}">
+                     class="tab-pane fade in  {% if tabv == "I" %}active show{% endif %}">
                     <a href="{% url 'boot_control' mac=device_mac  action='restart' %}">
                         <button class="btn btn-sm btn-success">Restart</button>
                     </a>
@@ -159,7 +159,7 @@
                     </div>
                 </div>
                 <div id="process"
-                     class="tab-pane fade {% if pos == "process_kill" %}show{% endif %}">
+                     class="tab-pane fade {% if tabv == "P" %}active show{% endif %}">
                     <h3>Processes</h3>
 
 
@@ -205,7 +205,7 @@
 
                 </div>
                 <div id="service"
-                     class="tab-pane fade {% if request.resolver_match.url_name == "service_control" %}show{% endif %}">
+                     class="tab-pane fade {% if tabv == "S" %}active show{% endif %}">
                     <h3>Services</h3>
                     <emp> Caution : Becarefull while managing these service. changing the status of system serives can
                         cause unexpected problems
@@ -296,7 +296,7 @@
                     </div>
                 </div>
                 <div id="execute"
-                     class="tab-pane fade {% if request.resolver_match.url_name == "execute" %}show{% endif %}">
+                     class="tab-pane fade {% if tabv == "E" %}active show{% endif %}">
                     <h3>PowerShell Script Execution (Admin)</h3>
                     <form method="post" action="{% url 'execute' mac=device_mac is_first='true'%}">
                         {% csrf_token %}

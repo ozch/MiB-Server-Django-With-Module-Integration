@@ -11,7 +11,7 @@
     <hr>
     <div class="container-fluid">
 
-    <a href="{% url 'agent_details' mac=mac %}">
+    <a href="{% url 'agent_details' mac=mac tab=tab %}">
         <button class="btn btn-sm btn-info">Go Back</button>
     </a>
     <a href="{% url 'execute' mac=mac is_first='false' %}">
@@ -28,6 +28,7 @@
     <pre>
     {{ script }}
     </pre>
+</div>
 </code>
 </body>
 </html>

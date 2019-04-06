@@ -31,15 +31,16 @@ urlpatterns = [
     path('login',main_view.LogInAction, name="login"),
     path('index/',  main_view.Dashboard,name='index'),
     #From AgentControl App
-    path('token_gen/',agent_views.TokenGeneration,name='token_gen'),
-    path('token_active/',agent_views.TokenActive,name='token_active'),
+    path('agent/token_gen/',agent_views.TokenGeneration,name='token_gen'),
+    path('agent/token_active/',agent_views.TokenActive,name='token_active'),
     path('agents/',agent_views.Agents,name='agents'),
-    path('agent/details/<str:mac>/',agent_views.AgentDetails,name='agent_details'),
+    path('agent/details/<str:tab>/<str:mac>/',agent_views.AgentDetails,name='agent_details'),
     path('agent/endtask/<str:mac>/<str:pn>/',agent_views.ProcessKill,name='process_kill'),
     path('agent/boot/<str:mac>/<str:action>/',agent_views.BootControl,name='boot_control'),
     path('agent/service/<str:mac>/<str:srv>/<str:op>',agent_views.ServiceControl,name='service_control'),
     path('agent/execute/<str:mac>/<str:is_first>/',agent_views.Execution,name='execute'),
-    path('uuid_gen/', agent_views.GenerateTokenAction, name='uuid_gen'),
+    path('agent/token/<str:mac>/<str:token>/',agent_views.TokenAuthentication,name='token_auth'),
+    path('agent/uuid_gen/', agent_views.GenerateTokenAction, name='uuid_gen'),
     #From BackgroundJobs
     path('openports/',job_views.OpenPortScan,name='openports'),
     path('snifferscan/',job_views.SnifferScan,name='snifferscan'),
@@ -48,8 +49,6 @@ urlpatterns = [
     #From PacketFlow App
     path('visualization/',packet_views.Visualization,name='visualization'),
     path('packetflow/', packet_views.PacketFlow, name='packetflow')
-
-
 
     #APIs
     #To be written
