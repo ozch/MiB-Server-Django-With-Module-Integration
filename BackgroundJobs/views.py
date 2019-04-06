@@ -13,7 +13,7 @@ def OpenPortScan(request):
     }
     return render(request=request,template_name='portscan.html',context=context)
 def SnifferScan(request):
-    sniffers = NetworkSnifferScanner.objects.filter(is_sniffer=1)
+    sniffers = NetworkSnifferScanner.objects.filter(is_sniffer=1).reverse()
     context = {
         'page_title': "- Packet Sniffer Scanner",
         'sniffers':sniffers

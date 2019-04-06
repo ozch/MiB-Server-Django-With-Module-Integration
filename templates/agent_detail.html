@@ -1,494 +1,346 @@
-{% load static %}
+{% extends 'base.html' %}
+{% block content %}
 
-<!DOCTYPE html>
-<html lang="en">
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
 
-<head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Network Engine - Agents Details</title>
-
-    <!-- Custom fonts for this template-->
-    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-          rel="stylesheet">
-
-    <!-- Custom styles for this template-->
-    <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+        <!-- Page Heading -->
+        <h1 class="h3 mb-4 text-gray-800">Agent Details</h1>
+        <!-- main -->
+        <div class="container-fluid">
+            <!--
+                          <h2>Dynamic Tabs</h2>
+                          <p>To make the tabs toggleable, add the data-toggle="tab" attribute to each link. Then add a .tab-pane class with a unique ID for every tab and wrap them inside a div element with class .tab-content.</p>
+            -->
 
 
-</head>
+            <ul class="nav nav-tabs navba h5 list-group flex-row">
+                <li class="list-group-item"><a data-toggle="tab" href="#sysinfo">System</a></li>
+                <li class="list-group-item"><a data-toggle="tab" href="#process">Processes</a></li>
+                <li class="list-group-item"><a data-toggle="tab" href="#service">Services</a></li>
+                <li class="list-group-item"><a data-toggle="tab" href="#openport">Open Port Scan</a></li>
+                <li class="list-group-item"><a data-toggle="tab" href="#execute">Script Execution</a></li>
+            </ul>
 
-<body id="page-top">
+            <div class="tab-content m-4">
+                <div id="sysinfo"
+                     class="tab-pane fade in active {% if request.resolver_match.url_name == "agent_details" %}show{% endif %}">
+                    <a href="{% url 'boot_control' mac=device_mac  action='restart' %}">
+                        <button class="btn btn-sm btn-success">Restart</button>
+                    </a>
+                    <a href="{% url 'boot_control' mac=device_mac  action='sleep' %}">
+                        <button class="btn btn-sm btn-warning">Sleep</button>
+                    </a>
+                    <a href="{% url 'boot_control' mac=device_mac  action='shutdown' %}">
+                        <button class="btn btn-sm btn-danger">Shutdown</button>
+                    </a>
+                    <hr>
+                    <h3>System Information</h3>
+                    <div class="row container-fluid">
+                        <!-- Start OS Table -->
+                        <div class="col col-11 card mx-2 px-1">
+                            <table class="table table-sm borde">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Operating System</th>
+                                    <th scope="col"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
 
-<!-- Page Wrapper -->
-<div id="wrapper">
 
-    <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+                                <tr>
+                                    <td scope="row">Username</td>
+                                    <td>{{ sysinfo.username }}</td>
+                                </tr>
 
-        <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-            <div class="sidebar-brand-icon rotate-n-15">
-                <i class="fab fa-accusoft"></i>
-            </div>
-            <div class="sidebar-brand-text mx-3">Network<sup>Engine</sup></div>
-        </a>
+                                <tr>
+                                    <td scope="row">Machine Name</td>
+                                    <td>{{ sysinfo.machine_name }}</td>
+                                </tr>
 
-        <!-- Divider -->
-        <hr class="sidebar-divider my-0">
+                                <tr>
+                                    <td scope="row">OS_name</td>
+                                    <td>{{ sysinfo.os_name }}</td>
+                                </tr>
+                                <tr>
+                                    <td scope="row">Architecture Type</td>
+                                    <td>{{ sysinfo.arc_type }}</td>
 
-        <!-- Nav Item - Dashboard -->
-        <li class="nav-item">
-            <a class="nav-link" href="#">
-                <i class="fas fa-fw fa-tachometer-alt"></i>
-                <span>Dashboard</span></a>
-        </li>
+                                </tr>
+                                <tr>
+                                    <td scope="row">OS Version</td>
+                                    <td>{{ sysinfo.os_version }}</td>
+                                </tr>
 
-        <!-- Divider -->
-        <hr class="sidebar-divider">
 
-        <!-- Heading -->
-        <div class="sidebar-heading">
-            MIB Controls
-        </div>
-        <li class="nav-item active">
-            <a class="nav-link" href="#">
-                <i class="fas fa-fw fa-desktop"></i>
-                <span>Agents</span></a>
-        </li>
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-               aria-expanded="true"
-               aria-controls="collapseTwo">
-                <i class="fas fa-fw fa-ticket-alt"></i>
-                <span>Tokens</span>
-            </a>
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Token Controls:</h6>
-                    <a class="collapse-item" href="#">Token Generation</a>
-                    <a class="collapse-item" href="#">Active Tokens</a>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- End OS Table -->
+                    </div>
+                    <hr>
+                    <div class="row container-fluid">
+                        <!-- Start Hardware Table -->
+                        <div class="col col-6 card mx-2 px-1">
+                            <table class="table table-sm borde">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Hardware</th>
+                                    <th scope="col"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <tr>
+                                    <td scope="row">CPU Model</td>
+                                    <td>{{ sysinfo.cpu_model }}</td>
+                                </tr>
+                                <tr>
+                                    <td scope="row">CPU Clock</td>
+                                    <td>{{ sysinfo.cpu_clock }}</td>
+                                </tr>
+                                <tr>
+                                    <td scope="row">RAM (GB)</td>
+                                    <td>{{ sysinfo.ram_gb }}</td>
+                                </tr>
+                                <tr>
+                                    <td scope="row">Cores (Logical + Physical)</td>
+                                    <td>{{ sysinfo.cores }}</td>
+                                </tr>
+                                <tr>
+                                    <td scope="row">Architecture Type</td>
+                                    <td>{{ sysinfo.arc_type }}</td>
+                                </tr>
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- End Hardware Table -->
+                        <!-- Start Network Table -->
+                        <div class="col col-5 card mx-2 px-1">
+                            <table class="table table-sm borde">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Network</th>
+                                    <th scope="col"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td scope="row">IP</td>
+                                    <td>{{ sysinfo.ip }}</td>
+                                </tr>
+                                <tr>
+                                    <td scope="row">Mask</td>
+                                    <td>{{ sysinfo.mask }}</td>
+                                </tr>
+                                <tr>
+                                    <td scope="row">Gateway</td>
+                                    <td>{{ sysinfo.gateway }}</td>
+                                </tr>
+                                <tr>
+                                    <td scope="row">MAC</td>
+                                    <td>{{ sysinfo.mac }}</td>
+                                </tr>
+                                <tr>
+                                    <td scope="row">NIC Type</td>
+                                    <td>{{ sysinfo.nic_type }}</td>
+                                </tr>
+                                <tr>
+                                    <td scope="row">NIC Speed (Current Operating)</td>
+                                    <td>{{ sysinfo.nic_speed }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- End Network Table -->
+                    </div>
                 </div>
-            </div>
-        </li>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider">
-
-        <!-- Heading -->
-        <div class="sidebar-heading">
-            Network
-        </div>
-
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
-               aria-controls="collapsePages">
-                <i class="fas fa-fw fa-stethoscope"></i>
-                <span>Scanning</span>
-            </a>
-            <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Network Scanning:</h6>
-                    <a class="collapse-item" href="#">Open Port Scan</a>
-                    <a class="collapse-item" href="#">Sniffer Scan</a>
-                </div>
-            </div>
-        </li>
+                <div id="process"
+                     class="tab-pane fade {% if pos == "process_kill" %}show{% endif %}">
+                    <h3>Processes</h3>
 
 
-        <!-- Nav Item - Tables -->
-        <li class="nav-item">
-            <a class="nav-link" href="#">
-                <i class="fas fa-fw fa-sitemap"></i>
-                <span>Network Devices</span></a>
-        </li>
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Running Processes</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-sm" id="ProcessTable" width="100%"
+                                       cellspacing="0">
+                                    <thead>
+                                    <tr>
+                                        <th>Process Name</th>
+                                        <th>PID</th>
+                                        <th>% Process Time</th>
+                                        <th>Ram Usage(MB)</th>
+                                        <th>Manage</th>
+                                    </tr>
+                                    </thead>
 
-        <!-- Nav Item - Tables -->
-        <li class="nav-item">
-            <a class="nav-link" href="#">
-                <i class="far fa-fw fa-eye"></i>
-                <span>Visualization</span></a>
-        </li>
+                                    <tbody>
+                                    {% for key,process in processes.items %}
+                                        {% if process.pn != "_Total" %}
+                                            <tr>
 
-        <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block">
+                                                <td>{{ process.pn }}</td>
+                                                <td>{{ process.pid }}</td>
+                                                <td>{{ process.ppt }}</td>
+                                                <td>{{ process.ru }}</td>
+                                                <td><a href="{% url 'process_kill' mac=device_mac pn=process.pn %}">
+                                                    <button class="btn btn-sm btn-warning">End Task</button>
+                                                </a></td>
 
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
-
-    </ul>
-    <!-- End of Sidebar -->
-
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
-
-        <!-- Main Content -->
-        <div id="content">
-
-            <!-- Topbar -->
-            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-                <!-- Sidebar Toggle (Topbar) -->
-                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                    <i class="fa fa-bars"></i>
-                </button>
-
-                <!-- Topbar Search -->
-                <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                    <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                               aria-label="Search" aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="button">
-                                <i class="fas fa-search fa-sm"></i>
-                            </button>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                </form>
 
-                <!-- Topbar Navbar -->
-                <ul class="navbar-nav ml-auto">
-
-                    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                    <li class="nav-item dropdown no-arrow d-sm-none">
-                        <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                           data-toggle="dropdown"
-                           aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-search fa-fw"></i>
-                        </a>
-                        <!-- Dropdown - Messages -->
-                        <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                             aria-labelledby="searchDropdown">
-                            <form class="form-inline mr-auto w-100 navbar-search">
-                                <div class="input-group">
-                                    <input type="text" class="form-control bg-light border-0 small"
-                                           placeholder="Search for..."
-                                           aria-label="Search" aria-describedby="basic-addon2">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary" type="button">
-                                            <i class="fas fa-search fa-sm"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
+                </div>
+                <div id="service"
+                     class="tab-pane fade {% if request.resolver_match.url_name == "service_control" %}show{% endif %}">
+                    <h3>Services</h3>
+                    <emp> Caution : Becarefull while managing these service. changing the status of system serives can
+                        cause unexpected problems
+                    </emp>
+                    <!-- start datatale -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">List of Services</h6>
                         </div>
-                    </li>
-                    <div class="topbar-divider d-none d-sm-block"></div>
-                    <!-- Nav Item - User Information -->
-                    <li class="nav-item dropdown no-arrow">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                           data-toggle="dropdown"
-                           aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">User </span>
-                        </a>
-                        <!-- Dropdown - User Information -->
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                             aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Profile
-                            </a>
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Settings
-                            </a>
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Activity Log
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Logout
-                            </a>
-                        </div>
-                    </li>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-sm" id="ServiceTable" width="100%"
+                                       cellspacing="0">
+                                    <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Status</th>
+                                        <th>Manage</th>
+                                    </tr>
+                                    </thead>
 
-                </ul>
-
-            </nav>
-            <!-- End of Topbar -->
-
-            <!-- Begin Page Content -->
-            <div class="container-fluid">
-
-                <!-- Page Heading -->
-                <h1 class="h3 mb-4 text-gray-800">Agent Details</h1>
-                <!-- main -->
-                <div class="container-fluid">
-                    <!--
-                                  <h2>Dynamic Tabs</h2>
-                                  <p>To make the tabs toggleable, add the data-toggle="tab" attribute to each link. Then add a .tab-pane class with a unique ID for every tab and wrap them inside a div element with class .tab-content.</p>
-                    -->
-
-                    <ul class="nav nav-tabs navba h5 list-group flex-row">
-                        <li class="list-group-item"><a data-toggle="tab" href="#home">System Information</a></li>
-                        <li class="list-group-item"><a data-toggle="tab" href="#menu1">Processes</a></li>
-                        <li class="list-group-item"><a data-toggle="tab" href="#menu2">Services</a></li>
-                        <li class="list-group-item"><a data-toggle="tab" href="#menu3">Open Port Scan</a></li>
-                    </ul>
-
-                    <div class="tab-content m-4">
-                        <div id="home" class="tab-pane fade in active">
-                            <h3>System Information</h3>
-                            <div class="row">
-                                <div class="col col-8 card mx-2 px-1">
-                                    <table class="table table-sm borde">
-                                        <thead>
+                                    <tbody>
+                                    {% for key,value in services.items %}
                                         <tr>
-                                            <th scope="col">Feature</th>
-                                            <th scope="col">Value</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td scope="row">Architecture Type</td>
-                                            <td>x64</td>
-
-                                        </tr>
-                                        <tr>
-                                            <td scope="row">Cores</td>
-                                            <td>4</td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="row">CPU Clock</td>
-                                            <td>1.90</td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="row">CPU Model</td>
-                                            <td>Intel(R) Core(TM) i3-4030U CPU @ 1.90GHz</td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="row">Gateway</td>
-                                            <td>192.168.1.1</td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="row">IP</td>
-                                            <td>192.168.1.12</td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="row">MAC</td>
-                                            <td>9CAD9702BC29</td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="row">Machine Name</td>
-                                            <td>DESKTOP-VLH7VHC</td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="row">Mask</td>
-                                            <td>255.255.255.0</td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="row">NIC Speed</td>
-                                            <td>137</td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="row">NIC Type</td>
-                                            <td>Wi-Fi</td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="row">OS_name</td>
-                                            <td>Microsoft Windows 10 Pro Education</td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="row">OS Version</td>
-                                            <td>Microsoft Windows NT 6.2.9200.0</td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="row">RAM (GB)</td>
-                                            <td>3.90</td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="row">Username</td>
-                                            <td>InspironPC</td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="row">OS Version</td>
-                                            <td>Microsoft Windows NT 6.2.9200.0</td>
-                                        </tr>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="menu1" class="tab-pane fade">
-                            <h3>Processes</h3>
-                            <div class="row">
-                                <div class="col col-8 card mx-2 px-1">
-                                    <table class="table table-sm borde">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col">Process Name</th>
-                                            <th scope="col">Process ID</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col">PPT</th>
-                                            <th scope="col">RU</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td scope="row">Brackets.exe</td>
-                                            <td>11276</td>
-                                            <td>Running</td>
-                                            <td>0</td>
-                                            <td>9</td>
-
-                                        </tr>
-                                        <tr>
-                                            <td scope="row">Brackets.exe</td>
-                                            <td>3700</td>
-                                            <td>Running</td>
-                                            <td>0</td>
-                                            <td>9</td>
-
-                                        </tr>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="menu2" class="tab-pane fade">
-                            <h3>Services</h3>
-                            <div class="row">
-                                <div class="col col-8 card mx-2 px-1">
-                                    <table class="table table-sm borde">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Process ID</th>
-                                            <th scope="col">Description</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col">Manage</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td scope="row">vds</td>
-                                            <td>11276</td>
-                                            <td>Virtual Disk</td>
-                                            <td>Stopped</td>
+                                            <td>{{ value.name }}</td>
+                                            <td>{{ value.status }}</td>
                                             <td>
-                                                <div class="btn-group">
-                                                    <button class="btn btn-sm btn-primary">Start</button>
-                                                    <button class="btn btn-sm btn-primary">Restart</button>
-                                                </div>
+                                                {% if value.status != "Running" %}
+                                                    <a href="{% url 'service_control' mac=device_mac srv=value.name op='start' %}">
+                                                        <button class="btn btn-sm btn-success">Start</button>
+                                                    </a>{% endif %}
+
+                                                {% if value.status != "Stopped" %}
+                                                    <a href="{% url 'service_control' mac=device_mac srv=value.name op='stop' %}">
+                                                        <button class="btn btn-sm btn-warning">Stop</button>
+                                                    </a>{% endif %}
+                                                <a href="{% url 'service_control' mac=device_mac srv=value.name op='delete' %}">
+                                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                                </a>
                                             </td>
 
                                         </tr>
-                                        <tr>
-                                            <td scope="row">WSearch</td>
-                                            <td>3556</td>
-                                            <td>Windows Search</td>
-                                            <td>Running</td>
-                                            <td>
-                                                <div class="btn-group">
-                                                    <button class="btn btn-sm btn-primary">Stop</button>
-                                                    <button class="btn btn-sm btn-primary">Restart</button>
-                                                </div>
-                                            </td>
-
-                                        </tr>
-
-                                        </tbody>
-                                    </table>
-                                </div>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                        <div id="menu3" class="tab-pane fade">
-                            <h3>Open Port Scan</h3>
-                            <div class="row">
-                                <div class="col-xl-2 col-md-6 col-sm-6 mb-4">
-                                    <div class="card border-left-primary shadow h-100 py-2">
-                                        <div class="card-body py-2">
-                                            <div class="row no-gutters align-items-center">
-                                                <div class="col mr-2">
-                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">40030</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-2 col-md-6 col-sm-6 mb-4">
-                                    <div class="card border-left-primary shadow h-100 py-2">
-                                        <div class="card-body py-2">
-                                            <div class="row no-gutters align-items-center">
-                                                <div class="col mr-2">
-                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">40200</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-2 col-md-6 col-sm-6 mb-4">
-                                    <div class="card border-left-primary shadow h-100 py-2">
-                                        <div class="card-body py-2">
-                                            <div class="row no-gutters align-items-center">
-                                                <div class="col mr-2">
-                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">43000</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                    </div>
+                    <!-- end datatale -->
 
+                </div>
+                <div id="openport" class="tab-pane fade">
+                    <h3>Open Port Scan</h3>
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">List Of Open Ports</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-sm" id="dataTable" width="100%"
+                                       cellspacing="0">
+                                    <thead>
+                                    <tr>
+                                        <th>Sr No.</th>
+                                        <th>Port Type</th>
+                                        <th>Port No</th>
+                                        <th>Application</th>
+                                        <th>CPE</th>
+                                        <th>Exta Info</th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    {% for ports in openports %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ ports.port_type }}</td>
+                                            <td>{{ ports.port_no }}</td>
+                                            <td>{{ ports.name }}</td>
+                                            <td>{{ ports.cpe }}</td>
+                                            <td>{{ ports.extrainfo }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
                             </div>
-
                         </div>
                     </div>
                 </div>
-                <!--main end-->
+                <div id="execute"
+                     class="tab-pane fade {% if request.resolver_match.url_name == "execute" %}show{% endif %}">
+                    <h3>PowerShell Script Execution (Admin)</h3>
+                    <div class="row">
+                        <div class="col-xl-2 col-md-6 col-sm-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body py-2">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">40030</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-md-6 col-sm-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body py-2">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">40200</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-md-6 col-sm-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body py-2">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">43000</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
+                    </div>
 
-            </div>
-            <!-- /.container-fluid -->
-
-        </div>
-        <!-- End of Main Content -->
-
-        <!-- Footer -->
-        <footer class="sticky-footer bg-white">
-            <div class="container my-auto">
-                <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; Network Enginer 2019</span>
                 </div>
             </div>
-        </footer>
-        <!-- End of Footer -->
+        </div>
+        <!--main end-->
+
 
     </div>
-    <!-- End of Content Wrapper -->
-
-</div>
-<!-- End of Page Wrapper -->
-
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a>
-
-
-<!-- Bootstrap core JavaScript-->
-<script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
-<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-
-<!-- Core plugin JavaScript-->
-<script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
-
-<!-- Custom scripts for all pages-->
-<script src="{% static 'js/sb-admin-2.min.js' %}"></script>
-
-</body>
-
-</html>
+    <!-- /.container-fluid -->
+{% endblock %}

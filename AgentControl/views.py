@@ -2,7 +2,8 @@ from django.shortcuts import render,redirect
 from django.utils import timezone
 import uuid
 from django.urls import reverse
-
+from BackgroundJobs.models import *
+import time
 from .models import *
 def Agents(request):
     print(timezone.get_current_timezone())
@@ -23,9 +24,19 @@ def Agents(request):
     }
     return render(request=request,template_name='agents.html',context=context)
 
-def AgentDetails(request):
+def AgentDetails(request,mac,pos = 'system'):
+    sysinfo = DeviceInfo.objects.get(mac_address=mac)
+    processes = ProcessInfo.objects.get(mac_address=mac)
+    services = ServicesInfo.objects.get(mac_address=mac)
+    openports = NetworkPortScanner.objects.filter(ip=sysinfo.ip_address)
     context = {
-        'page_title': "- Agent Details"
+        'page_title': "- Agent Details",
+        'sysinfo': sysinfo.sys_info,
+        'processes':processes.process_info,
+        'services':services.services_info,
+        'openports':openports,
+        'device_mac':mac,
+        'pos':pos
     }
     return render(request=request,template_name='agent_detail.html',context=context)
 
@@ -52,10 +63,32 @@ def TokenActive(request):
     }
     return render(request=request,template_name='token_active.html',context=context)
 
+def Execution(request,mac):
+    scrpt = Execute.objects.get(mac_address=mac)
+    scrpt.script_flag = 1
+    scrpt.script = 'ipconfig'
+    scrpt.save()
+    time.sleep(5)
+    return redirect(reverse('agent_details',kwargs={'mac':mac}))
 
-def Execution(request):
-    context = {
-        'page_title': "- Execution Window"
-    }
-    return render(request=request,template_name='404.html',context=context)
-
+def ProcessKill(request,mac,pn):
+    kill = Execute.objects.get(mac_address=mac)
+    kill.kill_flag = 1
+    kill.kill_name = pn
+    kill.save()
+    time.sleep(5)
+    return redirect(reverse('agent_details',kwargs={'mac':mac}))
+def BootControl(request,mac,action):
+    cntrl = Execute.objects.get(mac_address=mac)
+    cntrl.boot_flag = 1
+    cntrl.boot_command = action
+    cntrl.save()
+    time.sleep(5)
+    return redirect(reverse(Agents))
+def ServiceControl(request, mac, srv, op):
+    srv_cntrl = Execute.objects.get(mac_address=mac)
+    srv_cntrl.service_flag = 1
+    srv_cntrl.service_name = op+";"+srv
+    srv_cntrl.save()
+    time.sleep(5)
+    return redirect(reverse('agent_details',kwargs={'mac':mac}))

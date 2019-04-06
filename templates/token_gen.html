@@ -7,11 +7,12 @@
         <!-- Page Heading -->
 
         <h1 class="h3 mb-4 text-gray-800">Token Generation</h1>
-        <div class="container card-body align-content-end">
-            <a href="{% url 'uuid_gen' %}" class="btn btn-primary ">Generate Token</a>
+        <div class="row card-body">
+        <a href="{% url 'uuid_gen' %}" class="btn btn-primary">Generate New Token</a>
         </div>
 
         <div class="row container">
+
             {% for token in unusedtokens %}
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-info shadow h-100 py-2">
