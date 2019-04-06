@@ -298,42 +298,14 @@
                 <div id="execute"
                      class="tab-pane fade {% if request.resolver_match.url_name == "execute" %}show{% endif %}">
                     <h3>PowerShell Script Execution (Admin)</h3>
-                    <div class="row">
-                        <div class="col-xl-2 col-md-6 col-sm-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body py-2">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">40030</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    <form method="post" action="{% url 'execute' mac=device_mac is_first='true'%}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="script">Powershell/Command Script:</label>
+                            <textarea class="form-control" name="script" rows="8" id="script"></textarea>
                         </div>
-                        <div class="col-xl-2 col-md-6 col-sm-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body py-2">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">40200</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-2 col-md-6 col-sm-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body py-2">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">43000</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
+                        <input class="btn btn-success" type="submit" value="Run Script">
+                    </form>
 
                 </div>
             </div>

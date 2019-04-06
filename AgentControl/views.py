@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect
+
 from django.utils import timezone
 import uuid
 from django.urls import reverse
@@ -63,13 +64,32 @@ def TokenActive(request):
     }
     return render(request=request,template_name='token_active.html',context=context)
 
-def Execution(request,mac):
-    scrpt = Execute.objects.get(mac_address=mac)
-    scrpt.script_flag = 1
-    scrpt.script = 'ipconfig'
-    scrpt.save()
-    time.sleep(5)
-    return redirect(reverse('agent_details',kwargs={'mac':mac}))
+def Execution(request,mac,is_first):
+    data = request.POST
+    if is_first.lower() == 'true':
+        scrpt = Execute.objects.get(mac_address=mac)
+        scrpt.script_flag = 1
+        scrpt.script = data.get('script')
+        scrpt.save()
+        print(scrpt)
+
+        scrpt = Execute.objects.get(mac_address=mac)
+        context = {
+            'script':scrpt.script,
+            'mac': scrpt.mac_address,
+            'is_first':'false'
+        }
+        return render(request=request,template_name='script.html',context=context)
+    else:
+        time.sleep(5)
+        scrpt = Execute.objects.get(mac_address=mac)
+        context = {
+            'script': scrpt.script,
+            'mac': scrpt.mac_address,
+            'is_first': 'false'
+        }
+        return render(request=request, template_name='script.html', context=context)
+
 
 def ProcessKill(request,mac,pn):
     kill = Execute.objects.get(mac_address=mac)
