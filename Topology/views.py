@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from singleton import Singleton
+
+
 def NetworkDevices(request):
     config = Singleton
     context = {
@@ -7,4 +9,4 @@ def NetworkDevices(request):
         'devices_list': config.all_devices_list,
         'topology_data': config.topology
     }
-    return render(request=request,template_name='network_devices.html',context=context)
+    return render(request=request, template_name='network_devices.html', context=context)

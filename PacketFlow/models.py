@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Netflow(models.Model):
     version = models.IntegerField()
     reporter = models.PositiveIntegerField()
@@ -98,13 +99,19 @@ class Netflow(models.Model):
     application_name = models.CharField(max_length=256, blank=True, null=True)
     postipdiffservcodepoint = models.PositiveIntegerField(blank=True, null=True)
     replication_factor = models.PositiveIntegerField(blank=True, null=True)
+    ts = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'netflow'
+
     def __str__(self):
-        return "Src : {}  ---  Dest : {}  ---  Pkts : {}  ---  Bytes : {}   ".format(self.ipv4_src_addr,self.ipv6_dst_addr,self.in_pkts,self.in_bytes)
-#Created from view don't change
+        return "Src : {}  ---  Dest : {}  ---  Pkts : {}  ---  Bytes : {}   ".format(self.ipv4_src_addr,
+                                                                                     self.ipv6_dst_addr, self.in_pkts,
+                                                                                     self.in_bytes)
+
+
+# Created from view don't change
 class NetflowV(models.Model):
     id = models.IntegerField(primary_key=True)
     version = models.IntegerField()
@@ -221,9 +228,13 @@ class NetflowV(models.Model):
     tcp_flags_psh = models.BigIntegerField(blank=True, null=True)
     tcp_flags_ack = models.BigIntegerField(blank=True, null=True)
     tcp_flags_urg = models.BigIntegerField(blank=True, null=True)
+    ts = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         managed = False  # Created from a view. Don't remove.
         db_table = 'netflow_v'
+
     def __str__(self):
-        return "Src : {}  ---  Dest : {}  ---  Pkts : {}  ---  Bytes : {}   ".format(self.ipv4_src_addr,self.ipv6_dst_addr,self.in_pkts,self.in_bytes)
+        return "Src : {}  ---  Dest : {}  ---  Pkts : {}  ---  Bytes : {}   ".format(self.ipv4_src_addr,
+                                                                                     self.ipv6_dst_addr, self.in_pkts,
+                                                                                     self.in_bytes)

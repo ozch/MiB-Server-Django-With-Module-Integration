@@ -47,3 +47,7 @@ portscan:
 packetflow:
   host_ip: localhost
   port: 3310
+
+packetvis:
+  intervel: 10
+  packet_eql: 5

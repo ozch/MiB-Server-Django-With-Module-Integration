@@ -11,19 +11,21 @@
     <hr>
     <div class="container-fluid">
 
-    <a href="{% url 'agent_details' mac=mac tab=tab %}">
-        <button class="btn btn-sm btn-info">Go Back</button>
-    </a>
-    <a href="{% url 'execute' mac=mac is_first='false' %}">
-        <button class="btn btn-sm btn-warning">Refresh</button>
-    </a>
+        <a href="{% url 'agent_details' mac=mac tab=tab %}">
+            <button class="btn btn-sm btn-info">Go Back</button>
+        </a>
+        <a href="{% url 'execute' mac=mac is_first='false' %}">
+            <button class="btn btn-sm btn-warning">Refresh</button>
+        </a>
 
-        </div>
+    </div>
     <hr>
     <code class="container-fluid">
-    <emp>If you're seeing your own script that means script is taking time to execute In you're having problem try using 'orange' refresh button</emp>
+        <emp>If you're seeing your own script that means script is taking time to execute In you're having problem try
+            using 'orange' refresh button
+        </emp>
     </code>
-        <hr>
+    <hr>
 
     <pre>
     {{ script }}

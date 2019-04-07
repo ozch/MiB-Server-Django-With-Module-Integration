@@ -1,5 +1,6 @@
 import sys
 
+
 class RecursionLimit:
     def __init__(self, limit):
         self.limit = limit
@@ -7,5 +8,6 @@ class RecursionLimit:
 
     def __enter__(self):
         sys.setrecursionlimit(self.limit)
+
     def __exit__(self, type, value, tb):
         sys.setrecursionlimit(self.old_limit)

@@ -5,17 +5,20 @@ from logging import getLogger
 from .models import *
 from background_task import background
 
+
 def OpenPortScan(request):
     openports = NetworkPortScanner.objects.all()
     context = {
         'page_title': "- Open Port Scanner",
-        'openports':openports
+        'openports': openports
     }
-    return render(request=request,template_name='portscan.html',context=context)
+    return render(request=request, template_name='portscan.html', context=context)
+
+
 def SnifferScan(request):
     sniffers = NetworkSnifferScanner.objects.filter(is_sniffer=1).reverse()
     context = {
         'page_title': "- Packet Sniffer Scanner",
-        'sniffers':sniffers
+        'sniffers': sniffers
     }
-    return render(request=request,template_name='snifferscan.html',context=context)
+    return render(request=request, template_name='snifferscan.html', context=context)

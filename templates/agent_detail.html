@@ -298,7 +298,7 @@
                 <div id="execute"
                      class="tab-pane fade {% if tabv == "E" %}active show{% endif %}">
                     <h3>PowerShell Script Execution (Admin)</h3>
-                    <form method="post" action="{% url 'execute' mac=device_mac is_first='true'%}">
+                    <form method="post" action="{% url 'execute' mac=device_mac is_first='true' %}">
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="script">Powershell/Command Script:</label>

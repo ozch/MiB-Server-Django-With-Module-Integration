@@ -1,6 +1,7 @@
 from django.db import models
 from django_mysql.models import JSONField
 
+
 class TopologyBridge(models.Model):
     ip = models.CharField(max_length=100, blank=True, null=True)
     bridge = models.CharField(max_length=100, blank=True, null=True)
@@ -10,9 +11,9 @@ class TopologyBridge(models.Model):
     class Meta:
         managed = False
         db_table = 'topology_bridge'
-    def __str__(self):
-        return "DeviceIP:{}--- Bridge:{} ".format(self.ip,self.bridge)
 
+    def __str__(self):
+        return "DeviceIP:{}--- Bridge:{} ".format(self.ip, self.bridge)
 
 
 class TopologyDevices(models.Model):
@@ -28,8 +29,11 @@ class TopologyDevices(models.Model):
     class Meta:
         managed = False
         db_table = 'topology_devices'
+
     def __str__(self):
-        return "ChildIP : {}  ---  Age : {}  ---  Mac : {}  ---  Parent_IP : {}  ".format(self.child_ip,self.age,self.hard_address,self.parent_ip)
+        return "ChildIP : {}  ---  Age : {}  ---  Mac : {}  ---  Parent_IP : {}  ".format(self.child_ip, self.age,
+                                                                                          self.hard_address,
+                                                                                          self.parent_ip)
 
 
 class TopologyHardware(models.Model):
@@ -42,8 +46,10 @@ class TopologyHardware(models.Model):
     class Meta:
         managed = False
         db_table = 'topology_hardware'
+
     def __str__(self):
-        return "ParentIP : {}  ---  Mac : {}  ---  Type : {}  ---  Port : {}   ".format(self.parent_ip,self.mac,self.type,self.port)
+        return "ParentIP : {}  ---  Mac : {}  ---  Type : {}  ---  Port : {}   ".format(self.parent_ip, self.mac,
+                                                                                        self.type, self.port)
 
 
 class TopologySsh(models.Model):
@@ -57,5 +63,8 @@ class TopologySsh(models.Model):
     class Meta:
         managed = False
         db_table = 'topology_ssh'
+
     def __str__(self):
-        return "Hostname/IP : {}   ---  Port : {}  ---  Type : {}  ---  NetworkBits : {}".format(self.hostname,self.port,self.type,self.host_bits)
+        return "Hostname/IP : {}   ---  Port : {}  ---  Type : {}  ---  NetworkBits : {}".format(self.hostname,
+                                                                                                 self.port, self.type,
+                                                                                                 self.host_bits)

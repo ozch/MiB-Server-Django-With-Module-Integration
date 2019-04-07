@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include,path
+from django.urls import include, path
 from AgentControl import views as agent_views
 from Topology import views as topology_views
 from PacketFlow import views as packet_views
@@ -26,31 +26,32 @@ admin.site.site_title = "AdminPanel - NetworkEngine"
 admin.site.index_title = "Logout of the system before leaving.."
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #From MIBServer
-    path('',main_view.LogIn, name="login_page"),
-    path('login',main_view.LogInAction, name="login"),
-    path('index/',  main_view.Dashboard,name='index'),
-    #From AgentControl App
-    path('agent/token_gen/',agent_views.TokenGeneration,name='token_gen'),
-    path('agent/token_active/',agent_views.TokenActive,name='token_active'),
-    path('agents/',agent_views.Agents,name='agents'),
-    path('agent/details/<str:tab>/<str:mac>/',agent_views.AgentDetails,name='agent_details'),
-    path('agent/endtask/<str:mac>/<str:pn>/',agent_views.ProcessKill,name='process_kill'),
-    path('agent/boot/<str:mac>/<str:action>/',agent_views.BootControl,name='boot_control'),
-    path('agent/service/<str:mac>/<str:srv>/<str:op>',agent_views.ServiceControl,name='service_control'),
-    path('agent/execute/<str:mac>/<str:is_first>/',agent_views.Execution,name='execute'),
-    path('agent/token/<str:mac>/<str:token>/',agent_views.TokenAuthentication,name='token_auth'),
+    # From MIBServer
+    path('', main_view.LogIn, name="login_page"),
+    path('login', main_view.LogInAction, name="login"),
+    path('index/', main_view.Dashboard, name='index'),
+    # From AgentControl App
+    path('agent/token_gen/', agent_views.TokenGeneration, name='token_gen'),
+    path('agent/token_active/', agent_views.TokenActive, name='token_active'),
+    path('agents/', agent_views.Agents, name='agents'),
+    path('agent/details/<str:tab>/<str:mac>/', agent_views.AgentDetails, name='agent_details'),
+    path('agent/endtask/<str:mac>/<str:pn>/', agent_views.ProcessKill, name='process_kill'),
+    path('agent/boot/<str:mac>/<str:action>/', agent_views.BootControl, name='boot_control'),
+    path('agent/service/<str:mac>/<str:srv>/<str:op>', agent_views.ServiceControl, name='service_control'),
+    path('agent/execute/<str:mac>/<str:is_first>/', agent_views.Execution, name='execute'),
+    path('agent/token/<str:mac>/<str:token>/', agent_views.TokenAuthentication, name='token_auth'),
     path('agent/uuid_gen/', agent_views.GenerateTokenAction, name='uuid_gen'),
-    #From BackgroundJobs
-    path('openports/',job_views.OpenPortScan,name='openports'),
-    path('snifferscan/',job_views.SnifferScan,name='snifferscan'),
-    #From Topology App
-    path('network_devices/',topology_views.NetworkDevices,name='network_devices'),
-    #From PacketFlow App
-    path('visualization/',packet_views.Visualization,name='visualization'),
-    path('packetflow/', packet_views.PacketFlow, name='packetflow')
+    # From BackgroundJobs
+    path('openports/', job_views.OpenPortScan, name='openports'),
+    path('snifferscan/', job_views.SnifferScan, name='snifferscan'),
+    # From Topology App
+    path('network_devices/', topology_views.NetworkDevices, name='network_devices'),
+    # From PacketFlow App
+    path('visualization/', packet_views.Visualization, name='visualization'),
+    path('packetflow/', packet_views.PacketFlow, name='packetflow'),
+    path('viztopology/', packet_views.VizTopology, name='viztopology')
 
-    #APIs
-    #To be written
+    # APIs
+    # To be written
 
 ]

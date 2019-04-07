@@ -1,16 +1,20 @@
 from django.db import models
 from django_mysql.models import JSONField
 
+
 class DeviceInfo(models.Model):
     mac_address = models.CharField(primary_key=True, max_length=12)
     ip_address = models.CharField(max_length=20, blank=True, null=True)
     mask = models.CharField(max_length=20, blank=True, null=True)
     sys_info = JSONField(blank=True, null=True)
+
     class Meta:
         managed = False
         db_table = 'device_info'
+
     def __str__(self):
-        return "Mac : {}  ---  IP:{}  ---  Mask : {}   (More details)".format(self.mac_address,self.ip_address,self.mask)
+        return "Mac : {}  ---  IP:{}  ---  Mask : {}   (More details)".format(self.mac_address, self.ip_address,
+                                                                              self.mask)
 
 
 class Execute(models.Model):
@@ -30,8 +34,10 @@ class Execute(models.Model):
     class Meta:
         managed = False
         db_table = 'execute'
+
     def __str__(self):
-        return "Mac : {}  ---   LastOnline : {}".format(self.mac_address,self.online)
+        return "Mac : {}  ---   LastOnline : {}".format(self.mac_address, self.online)
+
 
 class OpenPorts(models.Model):
     mac_address = models.CharField(primary_key=True, max_length=12)
@@ -41,8 +47,9 @@ class OpenPorts(models.Model):
     class Meta:
         managed = False
         db_table = 'open_ports'
+
     def __str__(self):
-        return "Mac : {}  ---  OpenPorts : {}".format(self.mac_address,"Click for details.")
+        return "Mac : {}  ---  OpenPorts : {}".format(self.mac_address, "Click for details.")
 
 
 class ProcessInfo(models.Model):
@@ -53,8 +60,9 @@ class ProcessInfo(models.Model):
     class Meta:
         managed = False
         db_table = 'process_info'
+
     def __str__(self):
-        return "Mac : {}  ---  ProcessInfo : {}".format(self.mac_address,"Click for details.")
+        return "Mac : {}  ---  ProcessInfo : {}".format(self.mac_address, "Click for details.")
 
 
 class ServicesInfo(models.Model):
@@ -65,8 +73,9 @@ class ServicesInfo(models.Model):
     class Meta:
         managed = False
         db_table = 'services_info'
+
     def __str__(self):
-        return "Mac : {}  ---  ServiceInfo : {}".format(self.mac_address,"Click for details.")
+        return "Mac : {}  ---  ServiceInfo : {}".format(self.mac_address, "Click for details.")
 
 
 class Token(models.Model):
@@ -76,16 +85,18 @@ class Token(models.Model):
     class Meta:
         managed = False
         db_table = 'token'
+
     def __str__(self):
-        return "Token : {}  ---  Mac : {}".format(self.token,self.mac)
+        return "Token : {}  ---  Mac : {}".format(self.token, self.mac)
 
 
 class TokenStore(models.Model):
-
     token = models.CharField(primary_key=True, max_length=100)
     is_taken = models.IntegerField()
+
     class Meta:
         managed = False
         db_table = 'token_store'
+
     def __str__(self):
-        return "Token : {}  ---  isTaken : {}".format(self.token,self.is_taken)
+        return "Token : {}  ---  isTaken : {}".format(self.token, self.is_taken)

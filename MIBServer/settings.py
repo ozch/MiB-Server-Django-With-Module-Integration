@@ -12,10 +12,10 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 from singleton import Singleton
+
 config = Singleton
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -27,7 +27,6 @@ SECRET_KEY = 'iyf6j(*c1^jhge74&h!_7=$eyn9uyu_j_5e$#fmw=m%p@&ow=s'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -76,7 +75,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'MIBServer.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
@@ -86,11 +84,10 @@ DATABASES = {
         'NAME': config.db_schema,
         'USER': config.db_username,
         'PASSWORD': config.db_password,
-        'HOST': config.db_host,   # Or an IP Address that your DB is hosted on
+        'HOST': config.db_host,  # Or an IP Address that your DB is hosted on
         'PORT': config.db_port,
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -128,7 +125,6 @@ USE_L10N = True
 USE_TZ = False
 
 BACKGROUND_TASK_RUN_ASYNC = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/

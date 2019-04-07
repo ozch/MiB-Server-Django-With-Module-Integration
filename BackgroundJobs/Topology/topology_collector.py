@@ -1,12 +1,13 @@
-#python libraries
+# python libraries
 import paramiko
 import re
 import pprint
 import traceback
 import time
 
-#external libraries
+# external libraries
 from .mysql_connection import MySQLConnection
+
 
 class TopologyCollector():
     def getSshCredentials(self):
@@ -18,6 +19,7 @@ class TopologyCollector():
         print("Getting network device credentials...")
         result = cursor.fetchall()
         return result
+
     def collectRawNetwokData(self):
         self.getAllNetworkDevices()
         self.getHardwareAddress()
@@ -37,13 +39,13 @@ class TopologyCollector():
             hostname = str(cred[1])
             username = str(cred[2])
             password = str(cred[3])
-            host_type= str(cred[5])
-            port =str(cred[4])
-            print(hostname,username,password,host_type,port)
+            host_type = str(cred[5])
+            port = str(cred[4])
+            print(hostname, username, password, host_type, port)
             try:
                 print("Trying to contect with {}...".format(str(hostname)))
                 ssh.connect(hostname, port, username, password, look_for_keys=False)
-                stdin,stdout,stderr = ssh.exec_command('show ip arp')
+                stdin, stdout, stderr = ssh.exec_command('show ip arp')
                 output = stdout.readlines()
                 s = "\n".join(output)
                 ssh.close()
@@ -51,12 +53,12 @@ class TopologyCollector():
                 print("Connection Failure : Oops something went while trying to connect.\n")
                 ssh.close()
                 continue
-            line= iter(s.splitlines())
+            line = iter(s.splitlines())
             for i in line:
-                if(i=='' or i.startswith('Protocol')):
+                if (i == '' or i.startswith('Protocol')):
                     continue
                 else:
-                    temp = re.sub('\s+', ';',i).strip().split(";")
+                    temp = re.sub('\s+', ';', i).strip().split(";")
                     dict[temp[1]] = {}
                     dict[temp[1]]['protocol'] = temp[0]
                     dict[temp[1]]['age'] = temp[2]
@@ -65,27 +67,28 @@ class TopologyCollector():
                     dict[temp[1]]['interface'] = temp[5]
                     dict[temp[1]]['parent'] = hostname
                     dict[temp[1]]['parent_type'] = host_type
-                    query = "INSERT INTO mib.topology_devices (child_ip,age,hard_address,interface,parent_ip,parent_type,protocol,type) VALUES('{}','{}','{}','{}','{}','{}','{}','{}')".format(temp[1],temp[2],temp[3],temp[5],hostname,host_type,temp[0],temp[4])
+                    query = "INSERT INTO mib.topology_devices (child_ip,age,hard_address,interface,parent_ip,parent_type,protocol,type) VALUES('{}','{}','{}','{}','{}','{}','{}','{}')".format(
+                        temp[1], temp[2], temp[3], temp[5], hostname, host_type, temp[0], temp[4])
                     cursorx.execute(query)
-            if(cred[5].lower() == 'router'): #if it's a router skip
+            if (cred[5].lower() == 'router'):  # if it's a router skip
                 continue
             try:
                 print("Getting devices bridge infromation...")
-                #Connecting and Getting Data From Network Device
+                # Connecting and Getting Data From Network Device
                 ssh = paramiko.SSHClient()
                 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
                 ssh.connect(hostname, port, username, password, look_for_keys=False)
-                #ssh.exec_command('ping 192.168.1.0')
+                # ssh.exec_command('ping 192.168.1.0')
                 chan = ssh.invoke_shell()
                 chan.send('en\n')
                 time.sleep(1)
-                resp=chan.recv(9999)
+                resp = chan.recv(9999)
                 chan.send('ciscoen\n')
                 time.sleep(1)
-                resp=chan.recv(9999)
-                stdout= chan.send('show spanning-tree bridge address\n')
+                resp = chan.recv(9999)
+                stdout = chan.send('show spanning-tree bridge address\n')
                 time.sleep(1)
-                resp=chan.recv(9999)
+                resp = chan.recv(9999)
                 bridge = resp.decode("utf-8")
                 ssh.close()
             except:
@@ -93,13 +96,14 @@ class TopologyCollector():
                 traceback.print_exc()
                 ssh.close()
                 continue
-            bline= iter(bridge.splitlines())
+            bline = iter(bridge.splitlines())
             for i in bline:
                 if 'show spanning-tree' in i or '#' in i:
                     continue
-                temp = re.sub('\s+', ';',i).strip().split(";")
+                temp = re.sub('\s+', ';', i).strip().split(";")
                 print(temp)
-                query = "INSERT INTO mib.topology_bridge(ip,bridge,vlan,type)VALUES('{}','{}','{}','{}')".format(cred[1],temp[1],temp[0],cred[5])
+                query = "INSERT INTO mib.topology_bridge(ip,bridge,vlan,type)VALUES('{}','{}','{}','{}')".format(
+                    cred[1], temp[1], temp[0], cred[5])
                 cursorx.execute(query)
             pprint.pprint(dict)
         conx.commit()
@@ -138,7 +142,8 @@ class TopologyCollector():
                 continue
             line = iter(s.splitlines())
             for i in line:
-                if (i == '' or i.startswith("       ") or i.endswith('Ports') or i.startswith("----") or i.startswith("Total Mac")):
+                if (i == '' or i.startswith("       ") or i.endswith('Ports') or i.startswith("----") or i.startswith(
+                        "Total Mac")):
                     continue
                 else:
                     token = re.sub('\s+', ';', i).strip().split(";")

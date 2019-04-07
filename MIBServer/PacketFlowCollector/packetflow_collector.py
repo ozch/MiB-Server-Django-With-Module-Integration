@@ -1,4 +1,3 @@
-
 import argparse
 import asyncio
 import queue
@@ -8,7 +7,7 @@ import ipaddress
 import time
 import mysql.connector
 import os
-#from daemonize import Daemonize
+# from daemonize import Daemonize
 import logging
 import signal
 from singleton import Singleton
@@ -138,6 +137,7 @@ ALL_FIELDS = ['version', 'reporter', 'src_id', 'time_offset'] + [r for r in NETF
 
 verbose = 1
 
+
 def unpack(data):
     ln = len(data)
     if ln == 0:
@@ -219,7 +219,8 @@ class NetflowRecordV5(NetflowRecord):
         data = data[24:]
         if NetflowRecordV5.next_seq is not None and seq != NetflowRecordV5.next_seq:
             log_msg("NFv5 %s lost Netflow packets detected: expected %d, got %d" % (addr[0],
-                    NetflowRecordV5.next_seq, seq), msg_verb=2)
+                                                                                    NetflowRecordV5.next_seq, seq),
+                    msg_verb=2)
         NetflowRecordV5.next_seq = seq + rc_count
         NetflowRecordV5.time_offset[addr[0]] = pkt_data['unix_date'] - int(pkt_data['sysuptime'] / 1000)
         rc_found = 0
@@ -267,7 +268,8 @@ class NetflowRecordV9(NetflowRecord):
         data = data[20:]
         if NetflowRecordV9.seq is not None and seq != NetflowRecordV9.seq + 1:
             log_msg("NFv9 %s lost Netflow packets detected: expected %d, got %d" % (addr[0],
-                    NetflowRecordV9.seq + 1, seq), msg_verb=2)
+                                                                                    NetflowRecordV9.seq + 1, seq),
+                    msg_verb=2)
         NetflowRecordV9.seq = seq
         NetflowRecordV9.time_offset[addr[0]] = pkt_data['unix_date'] - int(pkt_data['sysuptime'] / 1000)
         fs_found = 0
@@ -594,6 +596,7 @@ def main():
                 log_msg("- waiting", msg_verb=3)
         except KeyboardInterrupt:
             log_msg("Reached end of wait()", msg_verb=3)
+
     wait_task = loop.create_task(wait(db_shutdown))
     try:
         loop.run_forever()
@@ -607,6 +610,7 @@ def main():
     loop.stop()
     loop.close()
 
+
 if __name__ == '__main__':
     if os.name == 'nt':
         default_pidfile = r'%TEMP%\netflow.pid'
@@ -615,6 +619,8 @@ if __name__ == '__main__':
     else:
         default_pidfile = None
     main()
+
+
 def initFlowCollector():
     print("Starting packet flow collector...")
     if os.name == 'nt':

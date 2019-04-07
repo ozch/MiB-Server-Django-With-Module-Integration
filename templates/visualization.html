@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NetFlow Visualizer</title>
+    <style type="text/css">
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <!-- jQuery library -->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script>
+        var pkt_url = "{% url 'packetflow'%}";
+        var viz_url = "{% url 'viztopology' %}";
+        var pkt_req_int = {{ intervel_ms }};
+    </script>
+
+</head>
+<body>
+<nav class="navbar navbar-default" style="padding:0px;margin:0px;">
+
+    <div class="container-fluid">
+
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Network Engine - Packet Flow Visualizer</a>
+
+        </div>
+        <div class="btn-toolbar">
+
+            <a class="nav navbar-nav navbar-right" href="{% url 'visualization' %}">
+                <button class="btn navbar-btn btn-sm btn-info" style=" margin: 8px;">Refresh</button>
+            </a>
+            <a class="nav navbar-nav navbar-right" href="{% url 'index' %}">
+                <button class="btn navbar-btn btn-sm btn-info" style=" margin: 8px;">Dashboard</button>
+            </a>
+            <a class="nav navbar-nav navbar-right" href="{% url 'network_devices' %}">
+                <button class="btn navbar-btn btn-sm btn-info" style=" margin: 8px;">Network</button>
+            </a>
+        </div>
+    </div>
+
+
+</nav>
+<div id="webgl"></div>
+<script src="{% static 'flow/lib/three.min.js' %}"></script>
+<script src="{% static 'flow/lib/three.module.js' %}"></script>
+<script src="{% static 'flow/lib/perlin.js' %}"></script>
+<script src="{% static 'flow/lib/dat.gui.min.js' %}"></script>
+<script src="{% static 'flow/lib/OBJLoader.js' %}"></script>
+<script src="{% static 'flow/lib/MTLLoader.js' %}"></script>
+<script src="{% static 'flow/lib/Tween.min.js' %}"></script>
+<script src="{% static 'flow/lib/OrbitControls.js' %}"></script>
+<script src="{% static 'flow/netflow.js' %}"></script>
+
+
+</body>
+</html>
