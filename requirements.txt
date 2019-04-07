@@ -1,4 +1,8 @@
 Django==2.1.7
+django-background-tasks==1.2.0
+django-mysql==3.0.0.post1
+django-utils==0.0.2
+django-compat==1.0.15
 mysqlclient==1.4.2
 numpy==1.16.2
 paramiko==2.4.2
@@ -11,5 +15,5 @@ asgiref==3.0.0
 =============================
 Microsoft Redistribution C++ 2013
 Microsoft Redistribution C++ 14.00
-NMAP
-MySQL
+NMAP v7.0.70.0
+MySQL v5.7
