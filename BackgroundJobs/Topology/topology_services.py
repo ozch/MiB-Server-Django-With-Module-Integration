@@ -9,7 +9,7 @@ def NetworkTopologyScanThread():
     config = Singleton
     tp = Topology()
     tg = TopologyGraph()
-    print("Scanning Network...")
+    print(">>Scanning Network...")
     while True:
         if config.mutex == 0:
             config.mutex = 1
@@ -41,11 +41,9 @@ def GetNetworkDevies(path_graph, router_interfaces):
         if removeable[0] in network_list:
             network_list.remove(removeable[0])
     router_ip_list = GetRouterInterfaceIPList(router_interfaces)
-    print("router_interface: ", router_ip_list)
     for ip in router_ip_list:
         if ip in network_list:
             network_list.remove(ip)
-    print(network_list)
     return network_list
 
 

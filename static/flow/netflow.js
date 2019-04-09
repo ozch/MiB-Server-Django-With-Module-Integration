@@ -11,74 +11,24 @@ const flow_speed = 0.05;
 const cube_size = 0.15;
 //one packet  in animate equal to number of real packets
 var packet_equal = 5;
+//time for new data request
 var timer;
+//mapping of ip to corrdinate on canvas
 var locations = {};
-var json_resp = {};//{'1': {'ip': ['192.168.0.1', '192.168.1.1', '192.168.2.1'], 'type': 'router', 'speed': '1000', 'mac': 'MULTIPLE', 'child': [{'ip': '192.168.1.2', 'type': 'switch', 'speed': 1000, 'mac': 'f872.ead0.bb80', 'child': [{'type': 'device', 'mac': 'a01d.48b6.69d7', 'speed': '100', 'ip': '192.168.1.10', 'interface': 'Fa0/27'}, {'ip': '192.168.1.3', 'type': 'switch', 'speed': '1000', 'mac': 'MULTIPLE', 'child': []}], 'interface': 'GigabitEthernet0/0'}]}};
-var json_resp_test = {
-    "1": {
-        "type": "router",
-        "mac": "BA03ADEAE2A0",
-        "speed": "1000",
-        "ip": ["192.168.1.1", "192.168.2.1", "192.168.3.1"],
-        "child": [
-            {
-                "type": "server",
-                "mac": "EBA6D7E41A34",
-                "speed": "1000",
-                "ip": "192.168.1.2",
-            },
-            {
-                "type": "device",
-                "mac": "EBA6D7E41A34",
-                "speed": "1000",
-                "ip": "192.168.1.3",
-            },
-            {
-                "type": "switch",
-                "mac": "EBA6D7E41A34",
-                "speed": "1000",
-                "ip": "192.168.1.4",
-                "child":
-                    [
-                        {
-                            "type": "device",
-                            "mac": "EBA6D7E41A35",
-                            "speed": "60",
-                            "ip": "192.168.1.5"
-                        },
-                        {
-                            "type": "device",
-                            "mac": "EBA6D7E41A6",
-                            "speed": "60",
-                            "ip": "192.168.1.6"
-                        },
-                        {
-                            "type": "switch",
-                            "mac": "484AD7233FE7",
-                            "speed": "1000",
-                            "ip": "192.168.2.7",
-                            "child":
-                                [
-                                    {
-                                        "type": "device",
-                                        "mac": "DBA6D7E41A35",
-                                        "speed": "60",
-                                        "ip": "192.168.2.3"
-                                    },
-                                    {
-                                        "type": "server",
-                                        "mac": "DBA6D7E41A6",
-                                        "speed": "60",
-                                        "ip": "192.168.2.4"
-                                    }
-                                ]
-                        }
-                    ]
-            }
+//hold data of network topology received from server
+var json_resp = {};
+//netflow/packetflow received from the server
+var net_flow = [];
+//holds all the packet flow information which is underway, packet moving on the canvas
+var json_flow = {};
 
-        ]
-    }
-};
+//Position Assignments
+var routerAssignment;
+var routerSwitches = {};
+var switchDevices = {};
+
+var move_packet_mutex = false;
+
 var color = {
     80: 'olive',//http
     443: 'green',//https
@@ -108,7 +58,7 @@ var color = {
     8000: 'black',//server
 };
 
-async function FlowRequest() {
+function RequestFlow() {
     $.ajax({
         url: pkt_url,
         dataType: 'json',
@@ -121,53 +71,6 @@ async function FlowRequest() {
     });
 }
 
-var net_flow = [];
-var net_flow_test = [
-    {
-        "start": "192.168.1.3",
-        "packets": 4,
-        "dest_port": 8000,
-        "path": ["192.168.1.1", "192.168.1.4", "192.168.2.7", "192.168.2.4"]
-    },
-    {
-        "start": "192.168.1.2",
-        "packets": 4,
-        "dest_port": 220,
-        "path": ["192.168.1.1"]
-    },
-    {
-        "start": "192.168.1.1",
-        "packets": 4,
-        "dest_port": 3306,
-        "path": ["192.168.1.4"]
-    },
-    {
-        "start": "192.168.2.3",
-        "packets": 4,
-        "dest_port": 220,
-        "path": ["192.168.2.7", "192.168.2.4"]
-    },
-    {
-        "start": "192.168.2.3",
-        "packets": 4,
-        "dest_port": 80,
-        "path": ["192.168.2.7", "192.168.2.4"]
-    },
-    {
-        "start": "192.168.2.3",
-        "packets": 4,
-        "dest_port": 111,
-        "path": ["192.168.2.7", "192.168.2.4"]
-    },
-    {
-        "start": "192.168.2.3",
-        "packets": 4,
-        "dest_port": 111,
-        "path": ["192.168.2.7", "192.168.2.4"]
-    }
-];
-//holds all the packet flow information which is underway
-var json_flow = {};
 
 init();
 animate();
@@ -203,8 +106,7 @@ function initTimer() {
     timer = new Date().getTime();
 }
 
-function init() {
-    //Initiating requirements
+function RequestTopology() {
     $.ajax({
         url: viz_url,
         dataType: 'json',
@@ -214,8 +116,11 @@ function init() {
             json_resp = JSON.parse(JSON.stringify(json));
         }
     });
+}
 
-
+function init() {
+    //Initiating requirements
+    RequestTopology();
     initRenderer();
     initCamera();
     initScene();
@@ -223,70 +128,67 @@ function init() {
     initTimer();
     assignPositions();
     drawDevices();
-    $.ajax({
-        url: pkt_url,
-        dataType: 'json',
-        method: 'GET',
-        async: false,
-        success: function (json) {
-            net_flow = net_flow.concat(json);
-        }
-    });
-
+    RequestFlow();
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
     var controls = new THREE.OrbitControls(camera, renderer.domElement);
 
 }
 
+
+var RequestingPacketFlow = setInterval(async function () {
+    RequestFlow();
+}, pkt_req_int);
+
 function animate() {
-    var timeElapsed = clock.getElapsedTime();
-
     controls.update();
-    var json_flow_c = JSON.parse(JSON.stringify(json_flow))
-    for (var key in json_flow_c) {
-
-        if (json_flow_c.hasOwnProperty(key)) {
-            movePackets(key, timeElapsed);
-        }
+    if (move_packet_mutex == false) {
+        movePacketBunch();
     }
-    if ((new Date().getTime() - timer) > pkt_req_int) {
-        timer = new Date().getTime();
-        FlowRequest();
-    }
-    addToAnmimateFlow();
-
+    addToAnimateFlow();
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
 }
 
-function getdistance(A, B) {
-    vec1 = new THREE.Vector3(A[0], 0, A[1])
-    vec2 = new THREE.Vector3(B[0], 0, B[1])
-    var distance = vec1.distanceTo(vec2);
-    return distance
-//Math.sqrt(Math.pow(A[0]-B[0],2)+Math.pow(A[1]-B[1],2))
+async function movePacketBunch() {
+    try {
+        move_packet_mutex = true;
+        var json_flow_c = JSON.parse(JSON.stringify(json_flow));
+        for (var key in json_flow_c) {
+
+            if (json_flow_c.hasOwnProperty(key)) {
+                movePackets(key);
+            }
+        }
+        move_packet_mutex = false;
+    } catch (e) {
+        move_packet_mutex = false;
+    }
 }
 
+function getdistance(A, B) {
+    var vec1 = new THREE.Vector3(A[0], 0, A[1]);
+    var vec2 = new THREE.Vector3(B[0], 0, B[1]);
+    var distance = vec1.distanceTo(vec2);
+    return distance
+}
+
+//check if the packet on the canvas is removeable or not
 function isBoxRemovable(packet, packets) {
     var x1 = packet.position.x;
     var x2 = json_flow[packets]["x"];
-
     var y1 = packet.position.z;
     var y2 = json_flow[packets]["y"];
     ans = getdistance([x1, y1], [x2, y2]);
-    //console.log(ans);
     if (ans < s_radious / 3) {
-        //console.log("removeable")
         return true;
-
     } else {
         return false;
     }
 }
 
+//move the packet along a guided path by incrementing its position
 function movePackets(packets) {
-
     var packet = scene.getObjectByName(packets);
     var list = findCoordinate([packet.position.x, packet.position.z], [json_flow[packets]["x"], json_flow[packets]["y"]]);
     if (isBoxRemovable(packet, packets)) {
@@ -304,27 +206,15 @@ function movePackets(packets) {
                 "path": path
             };
             net_flow.push(re_entry);
-            //next_ip = path.shift();
-            //console.log(next_ip);
-            //animateFlow(x,y,next_ip[0],next_ip[1],100,path,dest_port);
         }
-
-
-        /*}
-        else{
-            
-            json_flow[packets]["x"] = path.shift();
-            json_flow[packets]["y"] = path.shift();
-        }
-        */
 
     } else {
         try {
             packet.position.x = list[0];
             packet.position.z = list[1];
-            packet.rotation.x += 0.01;
-            packet.rotation.y += 0.01;
-            packet.rotation.z += 0.01;
+            packet.rotation.x += 0.02;
+            packet.rotation.y += 0.02;
+            packet.rotation.z += 0.02;
         } catch (err) {
             removePacket(packet);
             delete json_flow[packets];
@@ -332,61 +222,59 @@ function movePackets(packets) {
     }
 }
 
-async function addToAnmimateFlow() {
+//add all packet from net_dict to the animation so the can be seen by user
+async function addToAnimateFlow() {
     while (net_flow.length != 0) {
-        //getting coordinate of starting ip/device
-        var start_pos = locations[net_flow[0]["start"]];
-        //console.log(start_pos);
         var path = net_flow[0]["path"];
-        if (path.length >= 1) {
-
-            var next_ip = path.shift();
-            //console.log(next_ip);
+        //getting coordinate of starting ip/device
+        if (locations.hasOwnProperty(net_flow[0]["start"])) {
+            var start_pos = locations[net_flow[0]["start"]];
+        } else {
+            if (path.length > 1) {
+                var start_temp = path.shift();
+                net_flow[0]['start'] = start_temp;
+                net_flow[0]['path'] = path;
+                continue;
+            }
         }
+
+        if (path.length >= 1) {
+            var next_ip = path.shift();
+            if (!locations.hasOwnProperty(next_ip)) {
+                if (path.length > 1) {
+                    net_flow[0]['start'] = path.shift();
+                    net_flow[0]['path'] = path;
+                    continue
+                }
+            }
+        }
+        //Todo Same as above
         var parent_pos = locations[next_ip];
         var packets = net_flow[0]["packets"];
 
         var dest_port = net_flow[0]["dest_port"];
         for (let packet = 1; packet <= packets; packet++) {
-            await animateFlow(start_pos[0], start_pos[1], parent_pos[0], parent_pos[1], 100, path, dest_port, next_ip, packets);
-            net_flow.shift();
+            try {
+                await animateFlow(start_pos[0], start_pos[1], parent_pos[0], parent_pos[1], 100, path, dest_port, next_ip, packets);
+                net_flow.shift();
+                await sleep(2000);
+            } catch (e) {
+                net_flow.shift()
+            }
 
         }
-
     }
 }
 
-//add color option
+//sub function of animate flow which deals with an individual packet
 function animateFlow(position_x, position_y, parent_x, parent_y, pipe = 100, path, dest_port, next_ip, total_packets) {
     var pgeometry = new THREE.BoxGeometry(cube_size, cube_size, cube_size);
 
     if (color.hasOwnProperty(dest_port)) {
-
         var pmaterial = new THREE.MeshBasicMaterial({color: color[dest_port]});
     } else {
         var pmaterial = new THREE.MeshNormalMaterial();
     }
-
-    var pmesh = new THREE.Mesh(pgeometry, pmaterial);
-    pipe_rad = getPipeRadious(pipe);
-    pmesh.position.x = position_x + getCubeRandLocation(2.2);
-    pmesh.position.y = 0 + getCubeRandLocation(pipe_rad);
-    pmesh.position.z = position_y + getCubeRandLocation(pipe_rad);
-    scene.add(pmesh);
-    pmesh.name = generateUUID();
-    json_flow[pmesh.name] = {};
-    json_flow[pmesh.name]["x"] = parent_x;
-    json_flow[pmesh.name]["y"] = parent_y;
-    json_flow[pmesh.name]["parent_ip"] = next_ip;
-    json_flow[pmesh.name]["dest_port"] = dest_port;
-    json_flow[pmesh.name]["packets"] = total_packets;
-    json_flow[pmesh.name]["path"] = path;
-    //json_flow[pmesh.name]["packets"]=num_packets; 
-}
-
-function animateFlowRenew(position_x, position_y, parent_x, parent_y, pipe = 100, path, dest_port) {
-    var pgeometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
-    var pmaterial = new THREE.MeshNormalMaterial();
     var pmesh = new THREE.Mesh(pgeometry, pmaterial);
     pipe_rad = getPipeRadious(pipe);
     pmesh.position.x = position_x + getCubeRandLocation(pipe_rad);
@@ -397,7 +285,9 @@ function animateFlowRenew(position_x, position_y, parent_x, parent_y, pipe = 100
     json_flow[pmesh.name] = {};
     json_flow[pmesh.name]["x"] = parent_x;
     json_flow[pmesh.name]["y"] = parent_y;
+    json_flow[pmesh.name]["parent_ip"] = next_ip;
     json_flow[pmesh.name]["dest_port"] = dest_port;
+    json_flow[pmesh.name]["packets"] = total_packets;
     json_flow[pmesh.name]["path"] = path;
     //json_flow[pmesh.name]["packets"]=num_packets; 
 }
@@ -418,17 +308,13 @@ function getIPText(position_x, position_y, type, ip = "None") {
     loader.load('/static/flow/fonts/helvetiker_regular.typeface.json', function (font) {
 
         var temp_geometry = new THREE.TextGeometry(ip, {
-
             font: font,
-
             size: 0.4,
             height: 0.01,
             curveSegments: 0.01,
-
             bevelThickness: 0.005,
             bevelSize: 0.01,
             bevelEnabled: true
-
         });
         var p = 0;
         if (type == 1 || type == 2) {
@@ -438,14 +324,14 @@ function getIPText(position_x, position_y, type, ip = "None") {
         } else if (type == 4) {
             p = 6.5
         }
-        var temp_material = new THREE.MeshBasicMaterial({color: 0x525a63})
-        temp_geometry.center()
+        var temp_material = new THREE.MeshBasicMaterial({color: 0x525a63});
+        temp_geometry.center();
         temp_mesh = new THREE.Mesh(temp_geometry, temp_material);
         temp_mesh.position.x = position_x;
         temp_mesh.position.y = p;
         temp_mesh.position.z = position_y;
 
-        scene.add(temp_mesh)
+        scene.add(temp_mesh);
     });
 }
 
@@ -541,8 +427,8 @@ function resize(renderer, scene, camera, controls, clock) {
 
 function drawPipe(vstart, vend, scene, speed) {
     var radious = getPipeRadious(speed);
-    pipe_position_x = (vstart.x + vend.x) / 2
-    pipe_position_z = (vstart.z + vend.z) / 2
+    var pipe_position_x = (vstart.x + vend.x) / 2;
+    var pipe_position_z = (vstart.z + vend.z) / 2;
     var HALF_PI = Math.PI * .5;
     var distance = vstart.distanceTo(vend);
     var position = vend.clone().add(vstart).divideScalar(2);
@@ -568,7 +454,7 @@ function drawPipe(vstart, vend, scene, speed) {
     orientation.lookAt(vstart, vend, new THREE.Vector3(0, 1, 0));
     offsetRotation.makeRotationX(HALF_PI);
     orientation.multiply(offsetRotation);
-    cylinder.applyMatrix(orientation)
+    cylinder.applyMatrix(orientation);
     var temp_mesh = new THREE.Mesh(cylinder, material);
     temp_mesh.position.x = pipe_position_x;
     temp_mesh.position.z = pipe_position_z;
@@ -576,6 +462,14 @@ function drawPipe(vstart, vend, scene, speed) {
     scene.add(temp_mesh);
 }
 
+/* Mesh Basic Mapping
+    leftSide,        // Left side
+    rightSide,       // Right side
+    topSide,         // Top side
+    bottomSide,      // Bottom side
+    frontSide,       // Front side
+    backSide         // Back side
+*/
 function modelRouter(position_x, position_y) {
     var cubeMaterialArray = [];
     cubeMaterialArray.push(new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture('/static/flow/assets/textures/matt.jpg')}));
@@ -586,7 +480,7 @@ function modelRouter(position_x, position_y) {
     cubeMaterialArray.push(new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture('/static/flow/assets/textures/matt.jpg')}));
     var cubeMaterials = new THREE.MeshFaceMaterial(cubeMaterialArray);
     var cubeGeometry = new THREE.BoxGeometry(2.5, 1, 2);
-    mesh_cube = new THREE.Mesh(cubeGeometry, cubeMaterials);
+    var mesh_cube = new THREE.Mesh(cubeGeometry, cubeMaterials);
     mesh_cube.position.x = position_x;
     mesh_cube.position.y = 1.1;
     mesh_cube.position.z = position_y;
@@ -603,7 +497,7 @@ function modelSwitch(position_x, position_y) {
     cubeMaterialArray.push(new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture('/static/flow/assets/textures/matt.jpg')}));
     var cubeMaterials = new THREE.MeshFaceMaterial(cubeMaterialArray);
     var cubeGeometry = new THREE.BoxGeometry(2.5, 0.5, 1.5);
-    mesh_cube = new THREE.Mesh(cubeGeometry, cubeMaterials);
+    var mesh_cube = new THREE.Mesh(cubeGeometry, cubeMaterials);
     mesh_cube.position.x = position_x;
     mesh_cube.position.y = 0.8;
     mesh_cube.position.z = position_y;
@@ -623,8 +517,7 @@ function findCoordinate(A, B) {
     var pointA = new THREE.Vector3(A[0], A[1], 0);
     var pointB = new THREE.Vector3(B[0], B[1], 0);
     var next_point = getPointInBetweenByLen(pointA, pointB, flow_speed);
-    var coordinates = [next_point.x, next_point.y];
-    return coordinates;
+    return [next_point.x, next_point.y];
 }
 
 function getPointInBetweenByLen(pointA, pointB, length) {
@@ -638,22 +531,7 @@ function removePacket(object) {
     scene.remove(selectedObject);
 }
 
-
-function findSlope(a, b) {
-    if (a[0] == b[0]) {
-        return null;
-    }
-
-    return (b[1] - a[1]) / (b[0] - a[0]);
-}
-
-function findIntercept(point, slope) {
-    if (slope === null) {
-        return point[0];
-    }
-    return point[1] - slope * point[0];
-}
-
+//generates a unique id for each packet so it can be identified in flow and re animated
 function generateUUID() {
     var d = new Date().getTime();
     if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
@@ -690,14 +568,6 @@ function getPipeRadious(speed) {
     return radious;
 }
 
-/*
-    leftSide,        // Left side
-    rightSide,       // Right side
-    topSide,         // Top side
-    bottomSide,      // Bottom side
-    frontSide,       // Front side
-    backSide         // Back side
-*/
 function drawDevices() {
     let previousRouter;
     for (let key in json_resp) {
@@ -740,10 +610,6 @@ function drawSwitchChilds(sw) {
         }
     });
 }
-
-var routerAssignment;
-var routerSwitches = {};
-var switchDevices = {}
 
 function assignPositions() {
     for (let key in json_resp) {

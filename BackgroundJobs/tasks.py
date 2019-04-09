@@ -1,9 +1,7 @@
 from background_task import background
-from logging import getLogger
 from .Topology import topology_services as tp
 from .NetworkScanning import port_scanner as ps
 
-logger = getLogger(__name__)
 from singleton import Singleton
 
 config = Singleton

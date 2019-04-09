@@ -35,6 +35,11 @@ def LogIn(request):
 
 
 def LogInAction(request):
+    data = request.POST.copy()
+    print(data)
+    name = data.get('name')
+    password = data.get('pass')
+    print (name, " ", password)
     return redirect(reverse(Dashboard))
 
 

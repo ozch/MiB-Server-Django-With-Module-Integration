@@ -1,6 +1,3 @@
-import sys
-
-
 class TopologyGraph():
     def __init__(self):
         self.graph_tp = {}
@@ -50,20 +47,23 @@ class TopologyGraph():
             else:
                 path_start_node.append(ip)
 
-    def find_path(self, graph, start_vertex, end_vertex, path=None):
+    def find_path(self, graph, start_vertex, end_vertex, path=None, exporter=None):
+        if start_vertex not in graph and exporter != None:
+            extended_path = self.find_path(graph, exporter, end_vertex, None, None)
+            return extended_path
         if path == None:
             path = []
         path = path + [start_vertex]
         if start_vertex == end_vertex:
             return path
-        if start_vertex not in graph:
-            return None
+        if start_vertex not in graph and exporter == None:
+            return []
         for vertex in graph[start_vertex]:
             if vertex not in path:
-                extended_path = self.find_path(graph, vertex, end_vertex, path)
+                extended_path = self.find_path(graph, vertex, end_vertex, path, None)
                 if extended_path:
                     return extended_path
-        return None
+        return []
 
     def GetRouterInterfaceIP(self, dict_tp):
         graph = {}
@@ -74,6 +74,8 @@ class TopologyGraph():
     def RemoveRedundentRouterIPs(self, routers, path):
         len(path)
         list_remove = []
+        if path == []:
+            return []
         for key in routers:
             prev = path[0]
             for i in range(1, len(path)):
