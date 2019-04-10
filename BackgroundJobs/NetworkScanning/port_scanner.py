@@ -4,10 +4,6 @@ import time
 from datetime import datetime
 from singleton import Singleton
 from django.utils import timezone
-from django.utils.timezone import activate
-from MIBServer.settings import TIME_ZONE
-
-activate(TIME_ZONE)
 
 from BackgroundJobs.models import *
 
@@ -59,7 +55,7 @@ def AddOpenPorts(type, ip, state, dict):
         instance_.reason = dict[key]['reason']
         instance_.state = dict[key]['state']
         instance_.version = dict[key]['version']
-        instance_.ts = timezone.localtime(timezone.now())
+        instance_.ts = timezone.now()
         instance_.port_no = key
         instance_.save()
 
@@ -72,9 +68,9 @@ def AddSnifferScanInformation(ip, is_sniffer, scan):
     if is_sniffer == 1:
         instance_.remarks = scan[0]['output']
         instance_.predict = scan[0]['id']
-        instance_.ts = timezone.localtime(timezone.now())
+        instance_.ts = timezone.now()
     else:
         instance_.remarks = "Null"
         instance_.predict = "Null"
-        instance_.ts = timezone.localtime(timezone.now())
+        instance_.ts = timezone.now()
     instance_.save()
