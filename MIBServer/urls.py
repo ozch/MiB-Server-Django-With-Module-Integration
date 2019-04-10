@@ -48,8 +48,10 @@ urlpatterns = [
     path('network_devices/', topology_views.NetworkDevices, name='network_devices'),
     # From PacketFlow App
     path('visualization/', packet_views.Visualization, name='visualization'),
-    path('packetflow/', packet_views.PacketFlow, name='packetflow'),
-    path('viztopology/', packet_views.VizTopology, name='viztopology')
+    path('api/packetflow/', packet_views.PacketFlow, name='packetflow'),
+    path('flowshark/', packet_views.FlowShark, name='flowshark'),
+    path('api/flowshark/', packet_views.FlowSharkAPI, name='api_flowshark'),
+    path('api/viztopology/', packet_views.VizTopology, name='viztopology')
 
     # APIs
     # To be written

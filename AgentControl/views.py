@@ -11,12 +11,6 @@ from .models import *
 
 
 def Agents(request):
-    username = None
-    if request.user.is_authenticated():
-        username = request.user.username
-    else:
-        return render(request=request,template_name='401.html',context={})
-
     print(timezone.get_current_timezone())
     now = timezone.now()
     reference_time = now - timezone.timedelta(seconds=6)

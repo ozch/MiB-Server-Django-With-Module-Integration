@@ -22,7 +22,7 @@ database:
 #scan intervel decide after how much time network must
 #be scanned for changes
 topology:
-  scan_intervel: 10
+  scan_intervel: 50
 
 #portscan configurations target OpenPortScanner module 
 #scan intervel decide after how much time devices must
@@ -35,7 +35,7 @@ topology:
 portscan:
   alpha: 1
   omega: 1024
-  scan_intervel: 200
+  scan_intervel: 100
 
 
 

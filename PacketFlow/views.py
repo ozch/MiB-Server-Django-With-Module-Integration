@@ -21,6 +21,11 @@ def Visualization(request):
 def VizTopology(request):
     return JsonResponse(config.topology)
 
+def FlowShark(request):
+    context = {
+               'intervel_ms': int(3) * 1000,
+               }
+    return render(request=request, template_name='flow_shark.html', context=context)
 
 def PacketFlow(request):
     net_flow = []
@@ -47,3 +52,19 @@ def PacketFlow(request):
                          })
 
     return JsonResponse(data=net_flow, safe=False)
+def FlowSharkAPI(request):
+    net_flow = []
+    now = timezone.now()
+    reference_time = now - timezone.timedelta(seconds=3)
+    flows = NetflowV.objects.filter(ts__gte=reference_time)
+    for flow in flows:
+        net_flow.append({"start":  flow.ipv4_src_addr_a,
+                         "end":  flow.ipv4_dst_addr_a,
+                         "reporter": flow.reporter_a,
+                         "src_port":flow.l4_src_port,
+                         "dest_port" :flow.l4_dst_port,
+                         "pkts":flow.in_pkts,
+                         "bytes":flow.in_bytes,
+                         })
+    return JsonResponse(data=net_flow, safe=False)
+

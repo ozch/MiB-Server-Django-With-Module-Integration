@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+        <h1 class="h3 mb-4 text-gray-800">Packet Flow Details</h1>
+        <div class="col col-12 card mx-2 px-1">
+            <table class="table table-sm borde"
+                   style="overflow-y:scroll;
+                    width:100%;
+                    height: 400px;
+                    display:block;">
+                <thead>
+                <tr>
+                    <th scope="col" style="width:15%;">Source</th>
+                    <th style="width:17%;">Src Port</th>
+                    <th style="width:17%;">Destination</th>
+                    <th style="width:17%;">Dest Port</th>
+                    <th style="width:17%;">Exporter</th>
+                    <th style="width:13%;">Packets</th>
+                    <th style="width:17%;">Bytes</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td scope="row"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="{% static 'flow/flowshark.js' %}"></script>
+
+    <!-- /.container-fluid -->
+
+{% endblock %}

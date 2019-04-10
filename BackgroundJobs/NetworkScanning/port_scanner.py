@@ -13,6 +13,7 @@ from BackgroundJobs.models import *
 
 
 def PortScanner():
+    print(">>Scanning Open Port...")
     config = Singleton
     devices = config.network_devices
     # print("Port_Scanner Devies List : ",devices)
