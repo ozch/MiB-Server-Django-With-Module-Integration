@@ -33,11 +33,7 @@ topology:
 #-rk must be scanned for packet sniffer
 #alpha and omega are the range for port scan.
 portscan:
-  alpha: 1
-  omega: 1024
-  scan_intervel: 100
-
-
+  scan_intervel: 10
 
 #packetflow configurations target PacketFlowCapture Mo
 #-dule port dedicate the port at which you want to col
@@ -49,5 +45,5 @@ packetflow:
   port: 3308
 
 packetvis:
-  intervel: 10
-  packet_eql: 30
+  intervel: 5
+  packet_eql: 5

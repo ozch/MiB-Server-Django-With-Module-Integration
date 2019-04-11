@@ -32,8 +32,6 @@ class Singleton():
     topology_scan_intervel = config["topology"]["scan_intervel"]
 
     # PortScan Configurations
-    port_scan_alpha = config["portscan"]["alpha"]
-    port_scan_omega = config["portscan"]["omega"]
     port_scan_scan_intervel = config["portscan"]["scan_intervel"]
 
     # PacketFlow Configurations

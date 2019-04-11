@@ -1,27 +1,35 @@
 import nmap
 import pprint
 import time
+import traceback
 from datetime import datetime
 from singleton import Singleton
 from django.utils import timezone
-
 from BackgroundJobs.models import *
 
 
 def PortScanner():
-    print(">>Scanning Open Port...")
+    print(">>Starting Job: Scanning Open Port...")
     config = Singleton
     devices = config.network_devices
+    NetworkPortScanner.objects.exclude(ip__in=config.network_devices).delete()
+    NetworkSnifferScanner.objects.exclude(ip__in=config.network_devices).delete()
     # print("Port_Scanner Devies List : ",devices)
     # Todo : remove this line its temprory
     for ip in devices:
-        nm = nmap.PortScanner()
-        ipaddress = ip
-        dict = nm.scan(hosts=ipaddress, arguments='nmap -sV --script=sniffer-detect ' + ipaddress)
-        # pprint.pprint(dict['scan'])
-        # Todo : Add Exception Handling here
-        if 'scan' in dict:
-            AddOpenPortScanInformation(scan=dict['scan'], ip=ip)
+        try:
+            nm = nmap.PortScanner()
+            ipaddress = ip
+            dict = nm.scan(hosts=ipaddress, arguments='nmap -sV --script=sniffer-detect ' + ipaddress)
+            # pprint.pprint(dict['scan'])
+            # Todo : Add Exception Handling here
+            if 'scan' in dict:
+                AddOpenPortScanInformation(scan=dict['scan'], ip=ip)
+        except Exception:
+            print("Exception While Scanning IP : ",ip)
+            traceback.print_exc()
+
+    print(">>Ending Job: Scanning Open Port...")
 
 
 def AddOpenPortScanInformation(scan, ip):

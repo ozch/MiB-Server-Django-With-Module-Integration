@@ -124,6 +124,12 @@
                 <span>Visualization</span></a>
         </li>
 
+        <li class="nav-item {% if request.resolver_match.url_name == "flowshark" %}active{% endif %}">
+            <a class="nav-link" href="{% url 'flowshark' %}">
+                <i class="far fa-fw fa-eye"></i>
+                <span>FlowShark</span></a>
+        </li>
+
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
 

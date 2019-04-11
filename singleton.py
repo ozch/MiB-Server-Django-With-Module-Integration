@@ -4,13 +4,12 @@ import yaml
 class Singleton():
     __instance = None
     f = open('config.yaml', 'r')
-    print("Used Outer")
-    # mutex lock for threads
+    # mutex lock for threads/async functions
     mutex = 0
 
     config = yaml.safe_load(f)
     # Module Intercommunication variables
-    flow_id = 0
+    flow_id = 0 #Currently Not Being Used
     path_graph = {}
     routers_interfaces = {}
     topology = {}
@@ -32,8 +31,6 @@ class Singleton():
     topology_scan_intervel = config["topology"]["scan_intervel"]
 
     # PortScan Configurations
-    port_scan_alpha = config["portscan"]["alpha"]
-    port_scan_omega = config["portscan"]["omega"]
     port_scan_scan_intervel = config["portscan"]["scan_intervel"]
 
     # PacketFlow Configurations
@@ -51,6 +48,6 @@ class Singleton():
 
     def __init__(self):
         if Singleton.__instance != None:
-            raise Exception("This class is a singleton!")
+            raise Exception("This is a singleton class! \n It is being used for data sharing only.")
         else:
             Singleton.__instance = self

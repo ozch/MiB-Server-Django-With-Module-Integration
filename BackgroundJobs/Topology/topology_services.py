@@ -9,7 +9,7 @@ def NetworkTopologyScanThread():
     config = Singleton
     tp = Topology()
     tg = TopologyGraph()
-    print(">>Scanning Network...")
+    print(">>Starting Job: Scanning Network...")
     while True:
         if config.mutex == 0:
             config.mutex = 1
@@ -27,6 +27,7 @@ def NetworkTopologyScanThread():
             break
         else:
             time.sleep(5)
+    print(">>Ending Job: Scanning Network...")
 
 
 def GetNetworkDevies(path_graph, router_interfaces):
