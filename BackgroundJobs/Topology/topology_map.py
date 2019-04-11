@@ -2,7 +2,7 @@ from .mysql_connection import MySQLConnection
 import ipaddress
 
 from difflib import SequenceMatcher
-
+import pprint
 
 class TopologyMapper():
 
@@ -104,7 +104,9 @@ class TopologyMapper():
         is_complete = True
         dict_rt, int_ip_rt, int_sp_rt = self.getRouterTopology()
         dict_sw, int_ip_sw, int_sp_sw = self.getSwitchTopology()
+        pprint.pprint(dict_sw)
         dict_rt, dict_sw = self.addRouterSwitchBridges(dict_rt, dict_sw)
+        pprint.pprint(dict_sw)
         dict_rt, dict_sw = self.addSwitchSwitchBridges(dict_rt, dict_sw)
         # print("RouterSwitch Topology")
         # pprint.pprint(dict_rt)
@@ -162,8 +164,8 @@ class TopologyMapper():
             macs = self.cursor.fetchall()
             for mac in macs:
                 self.cursor.execute(
-                    "SELECT child_ip,parent_ip FROM mib.topology_devices where hard_address='{}' and parent_type='Switch' and parent_ip='{}'".format(
-                        mac[0], switch[0]))
+                    "SELECT child_ip,parent_ip FROM mib.topology_devices where hard_address='{}' and parent_type='Router' and age!='-'".format(
+                        mac[0]))
                 devices = self.cursor.fetchall()
                 for device in devices:
                     if self.areInSameNetwork(switch[0], device[0], switch[1]) and self.isNotASwithcIP(device[0],
@@ -192,11 +194,12 @@ class TopologyMapper():
                     for router in routers:
                         # router(child_ip,age,mac,interface,parent_ip)topology_devices
                         if self.areInSameNetwork(router[0], switch[0], switch[1]) and router[1] == '-':
-                            query = "select parent_ip,mac,port from (SELECT parent_ip,mac,port FROM mib.topology_hardware group by port having count(*)<=1) as dist where dist.mac='{}' and dist.parent_ip='{}'".format(
-                                router[2], switch[0])
-                            self.cursor.execute(query)
-                            bridge = self.cursor.fetchone()
-                            if bridge == None:
+                            self.cursor.execute("select port from topology_hardware where parent_ip='{}' and mac='{}'".format(switch[0],router[2]))
+                            port = self.cursor.fetchone()
+                            self.cursor.execute("select * from topology_hardware where parent_ip='{}' and port='{}'".format(switch[0],port[0]))
+                            port_int = self.cursor.fetchall()
+                            port_count = len(port_int)
+                            if port_count > 1:
                                 continue
                             dict_sw[key]["interface"] = router[3]
                             dict_sw[key]["mac"] = router[2]

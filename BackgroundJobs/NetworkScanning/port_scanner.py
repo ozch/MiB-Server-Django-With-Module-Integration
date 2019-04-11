@@ -14,7 +14,6 @@ def PortScanner():
     devices = config.network_devices
     # print("Port_Scanner Devies List : ",devices)
     # Todo : remove this line its temprory
-    devices = ['192.168.1.1', '192.168.1.20']
     for ip in devices:
         nm = nmap.PortScanner()
         ipaddress = ip

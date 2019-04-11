@@ -9,6 +9,6 @@ class Topology():
         self.tc = TopologyCollector()
 
     def getTopology(self):
-        # self.tc.collectRawNetwokData()
+        #self.tc.collectRawNetwokData()
         dict = self.tm.getTopology()
         return dict

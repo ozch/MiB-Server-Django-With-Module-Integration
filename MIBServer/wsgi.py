@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/2.1/howto/deployment/wsgi/
 import os
 import subprocess
 import time
+import pprint
 from BackgroundJobs.Topology.mysql_connection import *
 from BackgroundJobs import tasks
 from singleton import Singleton
@@ -18,28 +19,32 @@ from logging import getLogger
 logger = getLogger(__name__)
 config = Singleton
 
-logger.info(">> Initializing Packet Flow Collector Module...")
+print(">> Initializing Packet Flow Collector Module...")
 try:
     pc_command = "python " + os.path.dirname(__file__) + "\\PacketFlowCollector\\packetflow_collector.py"
-    subprocess.Popen(pc_command,close_fds=True)
+    #subprocess.Popen(pc_command,close_fds=True)
 except:
-    logger.info(
+    print(
         ">> Error : Port Error Occured While Initializng Packet Flow Collector \n Try Force Closing Port : {} and Restating The Server...".format(
             config.pktflw_port))
 
-logger.info(">> Initializing Network Topology Mapping...")
+print(">> Initializing Network Topology Mapping...")
 tasks.TopologyMappingInit()
-# tasks.PortScanningThreadInit()
+pprint.pprint(config.topology)
+pprint.pprint(config.path_graph)
+pprint.pprint(config.all_devices_list)
+from BackgroundJobs.Topology.topology_graph import *
+tg = TopologyGraph()
 # Todo : this need to be change according to number of device in network
-logger.info(">> Deleting Previouslly Uncompleted Jobs...")
-from background_task.models import Task
-Task.objects.all().delete()
-time.sleep(10)
-logger.info(">> Initializing  New Jobs...")
-logger.info(">> Initializing Open Port Scanner...")
-tasks.PortScanningThread(repeat=config.port_scan_scan_intervel,repeat_until=None)
-logger.info(">> Initializing Packet Sniffer Scanner...")
-tasks.TopologyMapping(repeat=config.topology_scan_intervel,repeat_until=None)
+#print(">> Deleting Previouslly Uncompleted Jobs...")
+#from background_task.models import Task
+#Task.objects.all().delete()
+#time.sleep(10)
+#print(">> Initializing  New Jobs...")
+#print(">> Initializing Open Port Scanner...")
+#tasks.PortScanningThread(repeat=config.port_scan_scan_intervel,repeat_until=None)
+#print(">> Initializing Packet Sniffer Scanner...")
+#tasks.TopologyMapping(repeat=config.topology_scan_intervel,repeat_until=None)
 
 from django.core.wsgi import get_wsgi_application
 
