@@ -58,7 +58,7 @@ var color = {
     8000: 'black',//server
 };
 
-function RequestFlow() {
+async function RequestFlow() {
     $.ajax({
         url: pkt_url,
         dataType: 'json',
@@ -129,19 +129,24 @@ function init() {
     initTimer();
     assignPositions();
     drawDevices();
-    //RequestFlow();
+    RequestFlow();
+    RequestingPacketFlow();
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
     var controls = new THREE.OrbitControls(camera, renderer.domElement);
 
 }
 
-/*
-var RequestingPacketFlow = setInterval(async function () {
-    console.log("Requesting Flow")
-    RequestFlow();
-}, pkt_req_int);
-*/
+async function RequestingPacketFlow() {
+    console.log("Outer Loop");
+    await sleep(pkt_req_int);
+    await RequestFlow().then(async function () {
+        console.log("Inner Loop");
+        await RequestingPacketFlow();
+    });
+}
+
+
 function animate() {
     controls.update();
     if (move_packet_mutex == false) {

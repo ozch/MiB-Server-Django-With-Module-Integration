@@ -17,28 +17,6 @@ database:
   username: root
   password: admin
   schema: mib
-
-#topology configuration target topology mapping module.
-#scan intervel decide after how much time network must
-#be scanned for changes
-topology:
-  scan_intervel: 50
-
-#portscan configurations target OpenPortScanner module 
-#scan intervel decide after how much time devices must
-#be scanned for open ports
-#alpha and omega are the range for port scan.
-#portscan configurations target PacketSnifferDetection
-#module scan intervel decide after how much time netwo
-#-rk must be scanned for packet sniffer
-#alpha and omega are the range for port scan.
-portscan:
-  alpha: 1
-  omega: 1024
-  scan_intervel: 100
-
-
-
 #packetflow configurations target PacketFlowCapture Mo
 #-dule port dedicate the port at which you want to col
 #-lect the packet flow.
@@ -47,7 +25,3 @@ portscan:
 packetflow:
   host_ip: 192.168.1.10
   port: 3308
-
-packetvis:
-  intervel: 10
-  packet_eql: 30

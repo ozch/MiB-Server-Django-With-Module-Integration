@@ -4,6 +4,7 @@ from django.utils import timezone
 from BackgroundJobs.Topology.topology_graph import *
 from django.http import JsonResponse
 from singleton import Singleton
+import pprint
 import math
 
 config = Singleton
@@ -35,23 +36,26 @@ def PacketFlow(request):
     int_sec = int(config.pktflw_vis_intervel)
     reference_time = now - timezone.timedelta(seconds=int_sec)
     flows = NetflowV.objects.filter(ts__gte=reference_time)
+    flows = NetflowV.objects.all()
     print(flows.count())
     for flow in flows:
         start = flow.ipv4_src_addr_a
         end = flow.ipv4_dst_addr_a
         exporter = end = flow.reporter_a
         path = tg.find_path(graph, start, end, None, exporter)
+        packets = math.floor(int(flow.in_pkts) / int(config.pktflw_vis_pkt_eql))
         try:
             path.pop(0)
         except:
             continue
-        if flow.in_bytes < 100:
+        if flow.in_bytes < 100 or packets == 0:
             continue
         net_flow.append({"start": start,
-                         "packets": math.floor(int(flow.in_pkts) / int(config.pktflw_vis_pkt_eql)),
+                         "packets": packets,
                          "dest_port": flow.l4_dst_port,
                          "path": tg.RemoveRedundentRouterIPs(config.routers_interfaces, path)
                          })
+    pprint.pprint(net_flow)
 
     return JsonResponse(data=net_flow, safe=False)
 def FlowSharkAPI(request):

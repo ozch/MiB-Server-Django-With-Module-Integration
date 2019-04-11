@@ -12,8 +12,3 @@ python-nmap==0.6.1
 PyYAML==5.1
 sklearn==0.0
 asgiref==3.0.0
-=============================
-Microsoft Redistribution C++ 2013
-Microsoft Redistribution C++ 14.00
-NMAP v7.0.70.0
-MySQL v5.7

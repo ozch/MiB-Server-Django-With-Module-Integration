@@ -1,5 +1,6 @@
-(gci -include *.yaml,*.py,*html,*.cs,*.js -recurse | select-string .).Count
+Location BackgroundJobs/port_scanner.PortScanner
 #Time Taken Per Device ~160
+*****************************************************************************************
 #Reference For Devices without Sniffer
 {'192.168.1.20': {'addresses': {'ipv4': '192.168.1.20'},
                   'hostnames': [{'name': '', 'type': ''}],
@@ -37,7 +38,7 @@
                                  'state': 'open',
                                  'version': '5.7.25-log'}},
                   'vendor': {}}}
-
+*****************************************************************************************
 #Reference For Devices with Sniffer On
 {'192.168.1.1': {'addresses': {'ipv4': '192.168.1.1',
                                'mac': 'BC:98:89:4A:4A:44'},
