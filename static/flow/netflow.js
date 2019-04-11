@@ -65,8 +65,9 @@ function RequestFlow() {
         method: 'GET',
         async: false,
         success: function (json) {
-            //console.log(json)
+            console.log(json)
             net_flow = net_flow.concat(json);
+
         }
     });
 }
@@ -77,8 +78,8 @@ animate();
 
 function initCamera() {
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
-    camera.position.y = 20;
-    camera.position.z = 20;
+    camera.position.y = 50;
+    camera.position.z = 50;
     controls = new THREE.OrbitControls(camera);
     controls.update();
 }
@@ -128,18 +129,19 @@ function init() {
     initTimer();
     assignPositions();
     drawDevices();
-    RequestFlow();
+    //RequestFlow();
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
     var controls = new THREE.OrbitControls(camera, renderer.domElement);
 
 }
 
-
+/*
 var RequestingPacketFlow = setInterval(async function () {
+    console.log("Requesting Flow")
     RequestFlow();
 }, pkt_req_int);
-
+*/
 function animate() {
     controls.update();
     if (move_packet_mutex == false) {

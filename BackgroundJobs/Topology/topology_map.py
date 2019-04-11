@@ -196,11 +196,12 @@ class TopologyMapper():
                         if self.areInSameNetwork(router[0], switch[0], switch[1]) and router[1] == '-':
                             self.cursor.execute("select port from topology_hardware where parent_ip='{}' and mac='{}'".format(switch[0],router[2]))
                             port = self.cursor.fetchone()
-                            self.cursor.execute("select * from topology_hardware where parent_ip='{}' and port='{}'".format(switch[0],port[0]))
-                            port_int = self.cursor.fetchall()
-                            port_count = len(port_int)
-                            if port_count > 1:
-                                continue
+                            if port != None:
+                                self.cursor.execute("select * from topology_hardware where parent_ip='{}' and port='{}'".format(switch[0],port[0]))
+                                port_int = self.cursor.fetchall()
+                                port_count = len(port_int)
+                                if port_count > 1:
+                                    continue
                             dict_sw[key]["interface"] = router[3]
                             dict_sw[key]["mac"] = router[2]
                             dict_sw[key]["speed"] = self.getInterfaceSpeedIntRouter(router[3])

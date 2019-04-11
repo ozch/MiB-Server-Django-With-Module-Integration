@@ -44,12 +44,13 @@ class TopologyCollector():
             print(hostname, username, password, host_type, port)
             try:
                 print("Trying to contect with {}...".format(str(hostname)))
-                ssh.connect(hostname, port, username, password, look_for_keys=False)
+                ssh.connect(hostname, port, username, password, look_for_keys=False,timeout=30)
                 stdin, stdout, stderr = ssh.exec_command('show ip arp')
                 output = stdout.readlines()
                 s = "\n".join(output)
                 ssh.close()
-            except:
+            except Exception:
+                traceback.print_exc()
                 print("Connection Failure : Oops something went while trying to connect.\n")
                 ssh.close()
                 continue
@@ -91,7 +92,7 @@ class TopologyCollector():
                 resp = chan.recv(9999)
                 bridge = resp.decode("utf-8")
                 ssh.close()
-            except:
+            except Exception:
                 print("Connection Failure : Oops something went while trying to connect.\n")
                 traceback.print_exc()
                 ssh.close()
@@ -136,8 +137,9 @@ class TopologyCollector():
                 output = stdout.readlines()
                 s = "\n".join(output)
                 ssh.close()
-            except:
+            except Exception:
                 print("Connection Failure : Oops something went while trying to connect.\n")
+                traceback.print_exc()
                 ssh.close()
                 continue
             line = iter(s.splitlines())

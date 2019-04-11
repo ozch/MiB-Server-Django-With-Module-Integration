@@ -22,7 +22,7 @@ database:
 #scan intervel decide after how much time network must
 #be scanned for changes
 topology:
-  scan_intervel: 50
+  scan_intervel: 120
 
 #portscan configurations target OpenPortScanner module 
 #scan intervel decide after how much time devices must
@@ -33,7 +33,7 @@ topology:
 #-rk must be scanned for packet sniffer
 #alpha and omega are the range for port scan.
 portscan:
-  scan_intervel: 10
+  scan_intervel: 100
 
 #packetflow configurations target PacketFlowCapture Mo
 #-dule port dedicate the port at which you want to col

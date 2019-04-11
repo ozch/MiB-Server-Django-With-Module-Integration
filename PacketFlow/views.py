@@ -45,8 +45,10 @@ def PacketFlow(request):
             path.pop(0)
         except:
             continue
+        if flow.in_bytes < 100:
+            continue
         net_flow.append({"start": start,
-                         "packets": math.ceil(int(flow.in_pkts) / int(config.pktflw_vis_pkt_eql)) + 1,
+                         "packets": math.floor(int(flow.in_pkts) / int(config.pktflw_vis_pkt_eql)),
                          "dest_port": flow.l4_dst_port,
                          "path": tg.RemoveRedundentRouterIPs(config.routers_interfaces, path)
                          })
