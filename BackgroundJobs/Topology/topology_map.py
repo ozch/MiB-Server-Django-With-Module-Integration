@@ -2,13 +2,17 @@ from .mysql_connection import MySQLConnection
 import ipaddress
 
 from difflib import SequenceMatcher
+from singleton import Singleton
 import pprint
+
 
 class TopologyMapper():
 
     def __init__(self):
+        self.config = Singleton
         self.con = MySQLConnection().initConnection()
         self.cursor = self.con.cursor()
+        self.serverlist = self.config.server_list
 
     def areInSameNetwork(self, parent_ip, child_ip, parent_host_bit):
         parent = str(parent_ip) + '/' + str(parent_host_bit)
@@ -172,6 +176,8 @@ class TopologyMapper():
                                                                                                       switchs):
                         temp = {"type": "device", "mac": str(mac[0]), "speed": "100", "ip": device[0],
                                 "interface": mac[1]}
+                        if device[0] in self.serverlist:
+                            temp['type']='server'
                         dict[str_i]["child"].append(temp)
                         interface_ip[device[0]] = mac[1]
                         interface_speed[device[0]] = str(self.getInterfaceSpeedIntSwitch(mac[1]))
@@ -194,10 +200,15 @@ class TopologyMapper():
                     for router in routers:
                         # router(child_ip,age,mac,interface,parent_ip)topology_devices
                         if self.areInSameNetwork(router[0], switch[0], switch[1]) and router[1] == '-':
-                            self.cursor.execute("select port from topology_hardware where parent_ip='{}' and mac='{}'".format(switch[0],router[2]))
+                            self.cursor.execute(
+                                "select port from topology_hardware where parent_ip='{}' and mac='{}'".format(switch[0],
+                                                                                                              router[
+                                                                                                                  2]))
                             port = self.cursor.fetchone()
                             if port != None:
-                                self.cursor.execute("select * from topology_hardware where parent_ip='{}' and port='{}'".format(switch[0],port[0]))
+                                self.cursor.execute(
+                                    "select * from topology_hardware where parent_ip='{}' and port='{}'".format(
+                                        switch[0], port[0]))
                                 port_int = self.cursor.fetchall()
                                 port_count = len(port_int)
                                 if port_count > 1:

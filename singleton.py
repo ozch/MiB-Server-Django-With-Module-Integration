@@ -18,6 +18,8 @@ class Singleton():
     network_devices = {}
     # all devices contain everything including switches and routers
     all_devices_list = []
+    # all server ip list
+    server_list = []
     # Configuration variables
 
     # Database Configurations

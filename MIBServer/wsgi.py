@@ -37,6 +37,8 @@ print("Network Graph:")
 pprint.pprint(config.path_graph)
 print("Devices List:")
 pprint.pprint(config.network_devices)
+print("Servers List:")
+pprint.pprint(config.server_list)
 time.sleep(1)
 # Todo : this need to be change according to number of device in network
 print(">> Deleting Previouslly Uncompleted Jobs...")

@@ -1,5 +1,6 @@
 from singleton import Singleton
 from .topology_graph import TopologyGraph
+from Topology.models import TopologyServer
 from .topology import Topology
 import time
 from .mysql_connection import *
@@ -29,7 +30,12 @@ def NetworkTopologyScanThread():
             time.sleep(5)
     print(">>Ending Job: Scanning Network...")
 
-
+def GetServerIPList():
+    list = []
+    servers = TopologyServer.objects.all()
+    for server in servers:
+        list.append(server.ip)
+    return list
 def GetNetworkDevies(path_graph, router_interfaces):
     network_list = []
     for key in path_graph:

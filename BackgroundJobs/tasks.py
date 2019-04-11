@@ -1,7 +1,7 @@
 from background_task import background
 from .Topology import topology_services as tp
 from .NetworkScanning import port_scanner as ps
-
+from BackgroundJobs.Topology import topology_services
 from singleton import Singleton
 
 config = Singleton
@@ -13,6 +13,7 @@ def TopologyMapping():
 
 
 def TopologyMappingInit():
+    config.server_list = topology_services.GetServerIPList()
     tp.NetworkTopologyScanThread()
 
 
@@ -23,3 +24,4 @@ def PortScanningThread():
 
 def PortScanningThreadInit():
     ps.PortScanner()
+
