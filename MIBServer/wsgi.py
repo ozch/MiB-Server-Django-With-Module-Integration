@@ -23,7 +23,7 @@ config = Singleton
 print(">> Initializing Packet Flow Collector Module...")
 try:
     pc_command = "python " + os.path.dirname(__file__) + "\\PacketFlowCollector\\packetflow_collector.py"
-    #subprocess.Popen(pc_command,close_fds=True)
+    # subprocess.Popen(pc_command,close_fds=True)
 except:
     print(
         ">> Error : Port Error Occured While Initializng Packet Flow Collector \n Try Force Closing Port : {} and Restating The Server...".format(
@@ -48,21 +48,23 @@ Task.objects.all().delete()
 print(">> Dumping Previous Flow Data...")
 from django.core import serializers
 from PacketFlow.models import Netflow
-#DumpData = Netflow.objects.all()
-#data = serializers.serialize("json",DumpData)
-#timestr ='FlowDumps/'+time.strftime("%Y%m%d-%H%M%S")+'.json'
-#out = open(timestr, "w")
-#out.write(data)
-#out.close()
-#DumpData.delete()
-#time.sleep(2)
+
+DumpData = Netflow.objects.all()
+data = serializers.serialize("json", DumpData)
+timestr = 'FlowDumps/' + time.strftime("%Y%m%d-%H%M%S") + '.json'
+out = open(timestr, "w")
+out.write(data)
+out.close()
+# DumpData.delete()
+time.sleep(2)
 print(">> Initializing  New Jobs...")
 print(">> Initializing Open Port Scanner...")
-#tasks.PortScanningThread(repeat=config.port_scan_scan_intervel,repeat_until=None)
+tasks.PortScanningThread(repeat=config.port_scan_scan_intervel, repeat_until=None)
 print(">> Initializing Packet Sniffer Scanner...")
-tasks.TopologyMapping(repeat=config.topology_scan_intervel,repeat_until=None)
+tasks.TopologyMapping(repeat=config.topology_scan_intervel, repeat_until=None)
 
 print(">> Operation Completed...\n Status:Running...")
 from django.core.wsgi import get_wsgi_application
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MIBServer.settings')
 application = get_wsgi_application()

@@ -21,7 +21,6 @@ var json_resp = {};
 var net_flow = [];
 //holds all the packet flow information which is underway, packet moving on the canvas
 var json_flow = {};
-
 //Position Assignments
 var routerAssignment;
 var routerSwitches = {};
@@ -65,7 +64,7 @@ async function RequestFlow() {
         method: 'GET',
         async: false,
         success: function (json) {
-            console.log(json)
+
             net_flow = net_flow.concat(json);
 
         }
@@ -138,10 +137,8 @@ function init() {
 }
 
 async function RequestingPacketFlow() {
-    console.log("Outer Loop");
     await sleep(pkt_req_int);
     await RequestFlow().then(async function () {
-        console.log("Inner Loop");
         await RequestingPacketFlow();
     });
 }
@@ -152,7 +149,9 @@ function animate() {
     if (move_packet_mutex == false) {
         movePacketBunch();
     }
-    addToAnimateFlow();
+    if (net_flow != []) {
+        addToAnimateFlow();
+    }
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
 }
@@ -197,23 +196,23 @@ function isBoxRemovable(packet, packets) {
 //move the packet along a guided path by incrementing its position
 function movePackets(packets) {
     var packet = scene.getObjectByName(packets);
-    var list = findCoordinate([packet.position.x, packet.position.z], [json_flow[packets]["x"], json_flow[packets]["y"]]);
+    var flow_c = JSON.parse(JSON.stringify(json_flow[packets]));
+    var list = findCoordinate([packet.position.x, packet.position.z], [flow_c["x"], flow_c["y"]]);
     if (isBoxRemovable(packet, packets)) {
-        var dest_port = json_flow[packets]["dest_port"];
-        var parent_ip = json_flow[packets]["parent_ip"];
-        var pack = json_flow[packets]["packets"];
-        var path = json_flow[packets]["path"];
-        removePacket(packet);
-        delete json_flow[packets];
+        var dest_port = flow_c["dest_port"];
+        var parent_ip = flow_c["parent_ip"];
+        var path = flow_c["path"];
         if (path.length != 0) {
             var re_entry = {
                 "start": parent_ip,
-                "packets": pack,
+                "packets": 1,
                 "dest_port": dest_port,
                 "path": path
             };
             net_flow.push(re_entry);
         }
+        removePacket(packet);
+        delete json_flow[packets];
 
     } else {
         try {
@@ -232,16 +231,17 @@ function movePackets(packets) {
 //add all packet from net_dict to the animation so the can be seen by user
 async function addToAnimateFlow() {
     while (net_flow.length != 0) {
+        var start_init = net_flow[0]["start"];
         var path = net_flow[0]["path"];
+        var packets = net_flow[0]["packets"];
+        var dest_port = net_flow[0]["dest_port"];
         //getting coordinate of starting ip/device
-        if (locations.hasOwnProperty(net_flow[0]["start"])) {
-            var start_pos = locations[net_flow[0]["start"]];
+        if (locations.hasOwnProperty(start_init)) {
+            var start_pos = locations[start_init];
         } else {
             if (path.length > 1) {
-                var start_temp = path.shift();
-                net_flow[0]['start'] = start_temp;
-                net_flow[0]['path'] = path;
-                continue;
+                start_init = path.shift();
+                var start_pos = locations[start_init];
             }
         }
 
@@ -249,17 +249,16 @@ async function addToAnimateFlow() {
             var next_ip = path.shift();
             if (!locations.hasOwnProperty(next_ip)) {
                 if (path.length > 1) {
-                    net_flow[0]['start'] = path.shift();
-                    net_flow[0]['path'] = path;
-                    continue
+                    start_init = path.shift();
+                    next_ip = path.shift();
                 }
+                net_flow.shift();
+                continue;
+
             }
         }
         //Todo Same as above
         var parent_pos = locations[next_ip];
-        var packets = net_flow[0]["packets"];
-
-        var dest_port = net_flow[0]["dest_port"];
         for (let packet = 1; packet <= packets; packet++) {
             try {
                 await animateFlow(start_pos[0], start_pos[1], parent_pos[0], parent_pos[1], 100, path, dest_port, next_ip, packets);
