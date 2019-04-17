@@ -39,8 +39,8 @@ def PacketFlow(request):
     reference_time = now - timezone.timedelta(seconds=int_sec)
     flows = NetflowV.objects.filter(ts__gte=reference_time)
     # flows = NetflowV.objects.raw("SELECT distinct * FROM mib.netflow_v where ipv4_dst_addr_a='192.168.0.2'")
-    flows = NetflowV.objects.all()
-    # print(flows.count())
+    #flows = NetflowV.objects.all()
+    #print(flows.count())
     for flow in flows:
         start = flow.ipv4_src_addr_a
         end = flow.ipv4_dst_addr_a
